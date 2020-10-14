@@ -25,7 +25,7 @@ class SocialServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
 
             $this->registerPublishes();
-            
+
         }
     }
 
