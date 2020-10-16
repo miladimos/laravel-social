@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

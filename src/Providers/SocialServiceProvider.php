@@ -23,6 +23,7 @@ class SocialServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+//        $this->loadMigrationsFrom(__DIR__.'/path/to/migrations');
 
         if ($this->app->runningInConsole()) {
 

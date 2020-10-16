@@ -13,7 +13,7 @@ class CreateLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('likes', function (Blueprint $table) {
+        Schema::create(config('social.likes.table'), function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
