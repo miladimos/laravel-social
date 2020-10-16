@@ -3,6 +3,7 @@
 namespace Miladimos\Social\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Miladimos\Social\Social;
 
 
 class SocialServiceProvider extends ServiceProvider
@@ -12,6 +13,7 @@ class SocialServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . "/../../config/config.php", 'social');
 
+        $this->registerFacades();
     }
 
     /**
@@ -27,6 +29,13 @@ class SocialServiceProvider extends ServiceProvider
             $this->registerPublishes();
 
         }
+    }
+
+    private function registerFacades()
+    {
+        $this->app->bind('social', function ($app) {
+            return new Social();
+        });
     }
 
     private function registerPublishes()
