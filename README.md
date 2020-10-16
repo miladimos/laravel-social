@@ -11,3 +11,16 @@
 ### برای نصب فایل های پکیج از دستور زیر استفاده کنید 
 
 ``php artisan social:install``
+
+
+#### امکانات 
+
+Like
+
+Favorite
+
+Bookmark
+
+Follow \ Unfollow
+
+Subscribe
