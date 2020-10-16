@@ -23,7 +23,7 @@ class SocialServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        $this->loadMigrationsFrom(__DIR__.'/path/to/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         if ($this->app->runningInConsole()) {
 
@@ -41,15 +41,14 @@ class SocialServiceProvider extends ServiceProvider
 
     private function registerPublishes()
     {
+
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('social.php')
         ], 'social-config');
 
-
-        if (! class_exists('CreatePostsTable')) {
+        if (! class_exists('CreateLikesTable')) {
             $this->publishes([
-                __DIR__ . '/../database/migrations/create_posts_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_posts_table.php'),
-                // you can add any number of migrations here
+                __DIR__ . '/../../database/migrations/2020_10_16_162735_create_likes_table.php' => database_path('migrations'),
             ], 'migrations');
         }
 

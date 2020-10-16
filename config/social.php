@@ -8,12 +8,22 @@ return [
         /*
          * likes Model.
          */
-        'model' => Miladimos\Social\Models\Like::class,
+        'likes_model' => Miladimos\Social\Models\Like::class,
+
+        /*
+         * likes counter Model.
+         */
+        'likes_counter_model' => Miladimos\Social\Models\LikeCounter::class,
 
         /*
         * likes table name.
         */
-        'table' => 'likes',
+        'likes_table' => 'likes',
+
+        /*
+        * likes counter table name.
+        */
+        'likes_counter_table' => 'like_counters',
 
         /*
         * user foreign id column name.
