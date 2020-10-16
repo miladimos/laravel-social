@@ -15,6 +15,8 @@ class CreateLikesTable extends Migration
     {
         Schema::create(config('social.likes.table'), function (Blueprint $table) {
             $table->id();
+            $table->foreignId(config('social.likes.user_id'))->index();
+            $table->morphs(config('social.likes.morphs'));
             $table->timestamps();
         });
     }

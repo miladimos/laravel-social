@@ -8,11 +8,6 @@
 
 ``composer require miladimos/laravel-social``
 
-### برای نصب فایل های پکیج از دستور زیر استفاده کنید 
-
-``php artisan social:install``
-
-
 #### امکانات 
 
 Like
