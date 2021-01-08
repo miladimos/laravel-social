@@ -13,13 +13,11 @@ class CreateLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('social.likes.likes_table'), function (Blueprint $table) {
+        Schema::create(config('social.subscription.subscriptions_table'), function (Blueprint $table) {
             $table->id();
-            $table->foreignId(config('social.likes.user_id'))->index()->comment('user_id');
-            $table->morphs(config('social.likes.morphs'));
-            $table->timestamps();
-
-            $table->unique(['likeable_id', 'likeable_type'], 'likes');
+            $table->unsignedBigInteger(config('favorite.user_foreign_key'))->index()->comment('user_id');
+            $table->morphs('favoriteable');
+            $table->unique(['likeable_id', 'likeable_type'], 'subscription');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('social.likes.likes_table'));
+        Schema::dropIfExists(config('social.subscription.subscriptions_table'));
     }
 }

@@ -11,7 +11,7 @@ class SocialServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . "/../../config/config.php", 'social');
+        $this->mergeConfigFrom(__DIR__ . "/../../config/social.php", 'social');
 
         $this->registerFacades();
     }
@@ -27,7 +27,7 @@ class SocialServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
 
-            $this->registerPublishes();
+            $this->registerConfig();
 
         }
     }
@@ -39,12 +39,17 @@ class SocialServiceProvider extends ServiceProvider
         });
     }
 
-    private function registerPublishes()
+    private function registerConfig()
     {
 
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('social.php')
         ], 'social-config');
+
+    }
+
+    private function registerMigrations()
+    {
 
         if (! class_exists('CreateLikesTable')) {
             $this->publishes([

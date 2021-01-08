@@ -35,7 +35,57 @@ return [
         */
         'morphs' => 'likeable',
 
+        /*
+     * User tables foreign key name.
+     */
+        'user_foreign_key' => 'user_id',
 
-    ]
+        /*
+     * Table name for likes records.
+     */
+        'likes_table' => 'likes',
+
+        /*
+     * Model name for like record.
+     */
+        'like_model' => Miladimos\Social\Models\Like::class,
+
+
+    ],
+
+    'bookmark' => [
+        /*
+            * Table name for subscriptions records.
+            */
+        'bookmarks_table' => 'bookmarks',
+
+        /*
+                * Model name for Subscribe record.
+                */
+        'bookmark_model' => Miladimos\Social\Models\Bookmark::class,
+    ],
+    'follows' => [
+        /*
+            * Table name for subscriptions records.
+            */
+        'subscriptions_table' => 'subscriptions',
+
+        /*
+                * Model name for Subscribe record.
+                */
+        'subscription_model' => Miladimos\Social\Models\Follows::class,
+    ],
+
+    'subscriptions' => [
+        /*
+            * Table name for subscriptions records.
+            */
+        'subscriptions_table' => 'subscriptions',
+
+        /*
+            * Model name for Subscribe record.
+            */
+        'subscription_model' => Miladimos\Social\Models\Subscription::class,
+    ],
 
 ];
