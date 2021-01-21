@@ -2,7 +2,9 @@
 
 namespace Miladimos\Social\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Like extends Model
 {
@@ -14,11 +16,6 @@ class Like extends Model
     protected $guarded = [];
 
     public $timestamps = true;
-
-    public function likeable()
-    {
-        return $this->morphTo();
-    }
 
     /**
      * @param array $attributes

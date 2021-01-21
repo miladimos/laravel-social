@@ -2,7 +2,9 @@
 
 namespace Miladimos\Social\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Like extends Model
 {
@@ -15,17 +17,12 @@ class Like extends Model
 
     public $timestamps = true;
 
-    public function likeable()
-    {
-        return $this->morphTo();
-    }
-
     /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = \config('like.likes_table');
+        $this->table = \config('social.likes.likes_table');
 
         parent::__construct($attributes);
     }
