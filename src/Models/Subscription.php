@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
-//    protected $table = config('social.likes.table', 'likes');
+    //    protected $table = config('social.likes.table', 'likes');
     protected $table = 'likes';
 
-    protected $fillable = ['user_id', 'likeable_id', 'likeable_type'];
+    // protected $fillable = ['user_id', 'likeable_id', 'likeable_type'];
 
     public $timestamps = true;
 

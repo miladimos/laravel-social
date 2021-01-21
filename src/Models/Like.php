@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
-//    protected $table = config('social.likes.table', 'likes');
+    //    protected $table = config('social.likes.table', 'likes');
     protected $table = 'likes';
 
-    protected $fillable = ['user_id', 'likeable_id', 'likeable_type'];
+    // protected $fillable = ['user_id', 'likeable_id', 'likeable_type'];
+
+    protected $guarded = [];
 
     public $timestamps = true;
 
