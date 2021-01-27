@@ -2,9 +2,12 @@
 
 namespace Miladimos\Social\Traits\Like;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 trait CanLike
 {
-/**
+    /**
      * @param  \Illuminate\Database\Eloquent\Model  $object
      *
      * @return Like
@@ -79,9 +82,9 @@ trait CanLike
     public function hasLiked(Model $object): bool
     {
         return ($this->relationLoaded('likes') ? $this->likes : $this->likes())
-                ->where('likeable_id', $object->getKey())
-                ->where('likeable_type', $object->getMorphClass())
-                ->count() > 0;
+            ->where('likeable_id', $object->getKey())
+            ->where('likeable_type', $object->getMorphClass())
+            ->count() > 0;
     }
 
     public function likes(): HasMany
@@ -89,3 +92,47 @@ trait CanLike
         return $this->hasMany(config('like.like_model'), config('like.user_foreign_key'), $this->getKeyName());
     }
 }
+
+// trait Favoriteable
+// {
+//     /**
+//      * @return bool
+//      */
+//     public function isFavoritedBy(Model $user)
+//     {
+//         if (\is_a($user, config('auth.providers.users.model'))) {
+//             if ($this->relationLoaded('favoriters')) {
+//                 return $this->favoriters->contains($user);
+//             }
+
+//             return ($this->relationLoaded('favorites') ? $this->favorites : $this->favorites())
+//                     ->where(\config('favorite.user_foreign_key'), $user->getKey())->count() > 0;
+//         }
+
+//         return false;
+//     }
+
+//     /**
+//      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+//      */
+//     public function favorites()
+//     {
+//         return $this->morphMany(config('favorite.favorite_model'), 'favoriteable');
+//     }
+
+//     /**
+//      * Return followers.
+//      *
+//      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//      */
+//     public function favoriters()
+//     {
+//         return $this->belongsToMany(
+//             config('auth.providers.users.model'),
+//             config('favorite.favorites_table'),
+//             'favoriteable_id',
+//             config('favorite.user_foreign_key')
+//         )
+//             ->where('favoriteable_type', $this->getMorphClass());
+//     }
+// }
