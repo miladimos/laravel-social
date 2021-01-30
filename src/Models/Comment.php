@@ -46,6 +46,16 @@ class Comment extends Model
         return $this->hasMany(Config::get('social.comments.model'), 'parent_id');
     }
 
+    public function hasChildren()
+    {
+        return $this->children()->count() > 0;
+    }
+
+    public function getChildren($columns = ['*'])
+    {
+        return $this->children()->get($columns);
+    }
+
     public function parent()
     {
         return $this->belongsTo(Config::get('social.comments.model'), 'parent_id');
@@ -60,21 +70,5 @@ class Comment extends Model
     public function setCommentAttribute($value)
     {
         $this->attributes['comment'] = str_replace(PHP_EOL, "<br>", $value);
-    }
-
-
-    public function hasChildren()
-    {
-        return $this->children()->count() > 0;
-    }
-
-    public function getChildren($columns = ['*'])
-    {
-        return $this->children()->get($columns);
-    }
-
-    public function scopeBeforeId($query, $beforeId)
-    {
-        return $query->where('id', '<', $beforeId);
     }
 }

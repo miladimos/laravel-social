@@ -2,38 +2,30 @@
 
 namespace Miladimos\Social\Traits\Like;
 
-trait Likeable
+use  Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+trait Bookmarkable
 {
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $user
-     *
-     * @return bool
-     */
-    public function isLikedBy(Model $user): bool
+    public function isBookmarkedBy(Model $user): bool
     {
         if (\is_a($user, config('auth.providers.users.model'))) {
             if ($this->relationLoaded('likers')) {
                 return $this->likers->contains($user);
             }
 
-            return $this->likers()->where(\config('like.user_foreign_key'), $user->getKey())->exists();
+            return $this->likers()->where(\config('social.bookmarks.user_foreign_key'), $user->getKey())->exists();
         }
 
         return false;
     }
 
-    /**
-     * Return followers.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function likers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function bookmarkers(): BelongsToMany
     {
         return $this->belongsToMany(
             config('auth.providers.users.model'),
-            config('like.likes_table'),
+            config('social.bookmarks.table'),
             'likeable_id',
-            config('like.user_foreign_key')
+            config('social.bookmarks.user_foreign_key')
         )
             ->where('likeable_type', $this->getMorphClass());
     }

@@ -1,61 +1,55 @@
 <?php
 
-namespace Miladimos\Social\Traits\Like;
+namespace Miladimos\Social\Traits\Bookmark;
 
-use Miladimos\Social\Models\Like;
+use Miladimos\Social\Models\Bookmark;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait CanLike
+trait CanBookmark
 {
     /**
      * @param  \Illuminate\Database\Eloquent\Model  $object
      *
-     * @return Like
+     * @return Bookmark
      */
-    public function like(Model $object): Like
+    public function bookmark(Model $object): Bookmark
     {
         $attributes = [
-            'likeable_type' => $object->getMorphClass(),
-            'likeable_id' => $object->getKey(),
-            config('like.user_foreign_key') => $this->getKey(),
+            'bookmarkable_type' => $object->getMorphClass(),
+            'bookmarkable_id' => $object->getKey(),
+            config('social.bookmark.user_foreign_key') => $this->getKey(),
         ];
 
-        /* @var \Illuminate\Database\Eloquent\Model $like */
-        $like = \app(config('like.like_model'));
+        /* @var \Illuminate\Database\Eloquent\Model $bookmark */
+        $bookmark = \app(config('social.bookmark.model'));
 
-        /* @var \Overtrue\LaravelLike\Traits\Likeable|\Illuminate\Database\Eloquent\Model $object */
-        return $like->where($attributes)->firstOr(
-            function () use ($like, $attributes) {
-                $like->unguard();
+        /* @var \Overtrue\LaravelBookmark\Traits\Bookmarkable|\Illuminate\Database\Eloquent\Model $object */
+        return $bookmark->where($attributes)->firstOr(
+            function () use ($bookmark, $attributes) {
+                $bookmark->unguard();
 
-                if ($this->relationLoaded('likes')) {
-                    $this->unsetRelation('likes');
+                if ($this->relationLoaded('bookmarks')) {
+                    $this->unsetRelation('bookmarks');
                 }
 
-                return $like->create($attributes);
+                return $bookmark->create($attributes);
             }
         );
     }
 
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $object
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    public function unlike(Model $object): bool
+    public function unbookmark(Model $object): bool
     {
-        /* @var \Overtrue\LaravelLike\Like $relation */
-        $relation = \app(config('like.like_model'))
-            ->where('likeable_id', $object->getKey())
-            ->where('likeable_type', $object->getMorphClass())
-            ->where(config('like.user_foreign_key'), $this->getKey())
+        /* @var \Overtrue\LaravelBookmark\Bookmark $relation */
+        $relation = \app(config('social.bookmark.model'))
+            ->where('bookmarkable_id', $object->getKey())
+            ->where('bookmarkable_type', $object->getMorphClass())
+            ->where(config('social.bookmark.user_foreign_key'), $this->getKey())
             ->first();
 
         if ($relation) {
-            if ($this->relationLoaded('likes')) {
-                $this->unsetRelation('likes');
+            if ($this->relationLoaded('bookmarks')) {
+                $this->unsetRelation('bookmarks');
             }
 
             return $relation->delete();
@@ -67,12 +61,12 @@ trait CanLike
     /**
      * @param  \Illuminate\Database\Eloquent\Model  $object
      *
-     * @return Like|null
+     * @return Bookmark|null
      * @throws \Exception
      */
-    public function toggleLike(Model $object)
+    public function toggleBookmark(Model $object)
     {
-        return $this->hasLiked($object) ? $this->unlike($object) : $this->like($object);
+        return $this->hasBookmarkd($object) ? $this->unbookmark($object) : $this->bookmark($object);
     }
 
     /**
@@ -80,16 +74,16 @@ trait CanLike
      *
      * @return bool
      */
-    public function hasLiked(Model $object): bool
+    public function hasBookmarkd(Model $object): bool
     {
-        return ($this->relationLoaded('likes') ? $this->likes : $this->likes())
-            ->where('likeable_id', $object->getKey())
-            ->where('likeable_type', $object->getMorphClass())
+        return ($this->relationLoaded('bookmarks') ? $this->bookmarks : $this->bookmarks())
+            ->where('bookmarkable_id', $object->getKey())
+            ->where('bookmarkable_type', $object->getMorphClass())
             ->count() > 0;
     }
 
-    public function likes(): HasMany
+    public function bookmarks(): HasMany
     {
-        return $this->hasMany(config('like.like_model'), config('like.user_foreign_key'), $this->getKeyName());
+        return $this->hasMany(config('social.bookmark.model'), config('social.bookmark.user_foreign_key'), $this->getKeyName());
     }
 }
