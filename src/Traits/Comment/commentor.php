@@ -1,13 +1,9 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Miladimos\Social\Traits\Comment;
 
 use Illuminate\Support\Facades\Config;
 
-/**
- * Add this trait to your User model so
- * that you can retrieve the comments for a user.
- */
 trait Commenter
 {
     /**
@@ -26,15 +22,6 @@ trait Commenter
         return $this->morphMany(Config::get('comments.model'), 'commenter')->where('approved', true);
     }
 
-
-}
-
-
-namespace BeyondCode\Comments\Traits;
-
-
-trait CanComment
-{
     /**
      * Check if a comment for a specific model needs to be approved.
      * @param mixed $model

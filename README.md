@@ -19,3 +19,5 @@ Bookmark
 Follow \ Unfollow
 
 Subscribe
+
+Comment

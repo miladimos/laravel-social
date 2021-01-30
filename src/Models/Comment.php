@@ -2,89 +2,21 @@
 
 namespace Miladimos\Social\Models;
 
-use Illuminate\Support\Str;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
-class Like extends Model
+class Comment extends Model
 {
-  /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'commenter'
-    ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'comment', 'approved', 'guest_name', 'guest_email'
-    ];
+    protected $table = config('social.comments.table');
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
+    protected $guarded = [];
+
+    protected $with = ['comments', 'commentator'];
+
     protected $casts = [
         'approved' => 'boolean'
     ];
-
-
-    /**
-     * The user who posted the comment.
-     */
-    public function commenter()
-    {
-        return $this->morphTo();
-    }
-
-    /**
-     * The model that was commented upon.
-     */
-    public function commentable()
-    {
-        return $this->morphTo();
-    }
-
-    /**
-     * Returns all comments that this comment is the parent of.
-     */
-    public function children()
-    {
-        return $this->hasMany(Config::get('comments.model'), 'parent_id');
-    }
-
-    /**
-     * Returns the comment to which this comment belongs to.
-     */
-    public function parent()
-    {
-        return $this->belongsTo(Config::get('comments.model'), 'parent_id');
-    }
-
-
-    use HasComments;
-
-    protected $fillable = [
-        'comment',
-        'user_id',
-        'is_approved'
-    ];
-
-    protected $casts = [
-        'is_approved' => 'boolean'
-    ];
-
-    public function scopeApproved($query)
-    {
-        return $query->where('is_approved', true);
-    }
 
     public function commentable()
     {
@@ -93,31 +25,13 @@ class Like extends Model
 
     public function commentator()
     {
-        return $this->belongsTo($this->getAuthModelName(), 'user_id');
-    }
-
-    public function approve()
-    {
-        $this->update([
-            'is_approved' => true,
-        ]);
-
-        return $this;
-    }
-
-    public function disapprove()
-    {
-        $this->update([
-            'is_approved' => false,
-        ]);
-
-        return $this;
+        return $this->belongsTo($this->getAuthModelName(), 'commentor_id');
     }
 
     protected function getAuthModelName()
     {
-        if (config('comments.user_model')) {
-            return config('comments.user_model');
+        if (config('socical.comments.user_model')) {
+            return config('socical.comments.user_model');
         }
 
         if (!is_null(config('auth.providers.users.model'))) {
@@ -127,4 +41,40 @@ class Like extends Model
         throw new Exception('Could not determine the commentator model name.');
     }
 
+    public function children()
+    {
+        return $this->hasMany(Config::get('social.comments.model'), 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Config::get('social.comments.model'), 'parent_id');
+    }
+
+
+    public function scopeApproved($query, $approved)
+    {
+        return $query->where('approved', $approved);
+    }
+
+    public function setCommentAttribute($value)
+    {
+        $this->attributes['comment'] = str_replace(PHP_EOL, "<br>", $value);
+    }
+
+
+    public function hasChildren()
+    {
+        return $this->children()->count() > 0;
+    }
+
+    public function getChildren($columns = ['*'])
+    {
+        return $this->children()->get($columns);
+    }
+
+    public function scopeBeforeId($query, $beforeId)
+    {
+        return $query->where('id', '<', $beforeId);
+    }
 }
