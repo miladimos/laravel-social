@@ -64,6 +64,17 @@ return [
                 */
         'bookmark_model' => Miladimos\Social\Models\Bookmark::class,
     ],
+    'comments' => [
+        /*
+            * Table name for subscriptions records.
+            */
+        'comments_table' => 'comments',
+
+        /*
+                * Model name for Subscribe record.
+                */
+        'comment_model' => Miladimos\Social\Models\Comment::class,
+    ],
     'follows' => [
         /*
             * Table name for subscriptions records.
