@@ -1,21 +1,11 @@
 <?php
 
-namespace Overtrue\LaravelSubscribe\Traits;
+namespace Miladimos\Social\Traits\Subscription;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelSubscribe\Subscription;
 
-/**
- * @property \Illuminate\Database\Eloquent\Collection $subscriptions
- * @property \Illuminate\Database\Eloquent\Collection $subscribers
- */
 trait Subscribable
 {
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $user
-     *
-     * @return bool
-     */
     public function isSubscribedBy(Model $user)
     {
         if (\is_a($user, \config('auth.providers.users.model'))) {
@@ -24,30 +14,24 @@ trait Subscribable
             }
 
             return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
-                    ->where(\config('subscribe.user_foreign_key'), $user->getKey())->count() > 0;
+                ->where(\config('social.subscribtions.user_foreign_key'), $user->getKey())->count() > 0;
         }
 
         return false;
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
     public function subscriptions()
     {
-        return $this->morphMany(\config('subscribe.subscription_model'), 'subscribable');
+        return $this->morphMany(\config('social.subscribtions.model'), 'subscribable');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function subscribers()
     {
         return $this->belongsToMany(
             config('auth.providers.users.model'),
-            config('subscribe.subscriptions_table'),
+            config('social.subscribtions.table'),
             'subscribable_id',
-            config('subscribe.user_foreign_key')
+            config('social.subscribtions.user_foreign_key')
         )
             ->where('subscribable_type', $this->getMorphClass());
     }
