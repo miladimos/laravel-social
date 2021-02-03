@@ -1,6 +1,6 @@
 <?php
 
-namespace drh2so4\Thumbnail\Traits;
+namespace Miladimos\Social\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
@@ -11,7 +11,6 @@ trait Thumbnail
     public function makeThumbnail($fieldname = 'image', $custom = [])
     {
         if (! empty(request()->$fieldname) || $custom['image']) {
-            /* ------------------------------------------------------------------- */
 
             $image_file = $custom['image'] ?? request()->file($fieldname); // Retriving Image File
             $extension = $this->image_info($image_file)->extension; //Retriving Image extension

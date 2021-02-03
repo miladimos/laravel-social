@@ -1,6 +1,6 @@
 <?php
 
-namespace ChrisDiCarlo\EloquentHumanTimestamps;
+namespace Miladimos\Social\Traits;
 
 use Illuminate\Support\Str;
 
