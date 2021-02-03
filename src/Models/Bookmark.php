@@ -1,28 +1,20 @@
 <?php
 
-namespace Overtrue\LaravelFavorite;
+namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Overtrue\LaravelFavorite\Events\Favorited;
-use Overtrue\LaravelFavorite\Events\Unfavorited;
+use Overtrue\LaravelBookmark\Events\Bookmarkd;
+use Overtrue\LaravelBookmark\Events\UnBookmark;
 
-/**
- * @property \Illuminate\Database\Eloquent\Model $user
- * @property \Illuminate\Database\Eloquent\Model $favoriter
- * @property \Illuminate\Database\Eloquent\Model $favoriteable
- */
-class Favorite extends Model
+class Bookmark extends Model
 {
     protected $guarded = [];
 
-    /**
-     * @var string[]
-     */
     protected $dispatchesEvents = [
-        'created' => Favorited::class,
-        'deleted' => Unfavorited::class,
+        'created' => Bookmarkd::class,
+        'deleted' => UnBookmark::class,
     ];
 
     public function __construct(array $attributes = [])

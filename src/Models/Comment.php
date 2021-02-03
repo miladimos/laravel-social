@@ -3,11 +3,11 @@
 namespace Miladimos\Social\Models;
 
 use Exception;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-
     protected $table = config('social.comments.table');
 
     protected $guarded = [];
@@ -22,6 +22,15 @@ class Comment extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * The user who posted the comment.
+     */
+    public function commentorable()
+    {
+        return $this->morphTo();
+    }
+
 
     public function commentator()
     {
@@ -60,7 +69,6 @@ class Comment extends Model
     {
         return $this->belongsTo(Config::get('social.comments.model'), 'parent_id');
     }
-
 
     public function scopeApproved($query, $approved)
     {

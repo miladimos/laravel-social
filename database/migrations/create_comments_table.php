@@ -12,7 +12,8 @@ class CreateCommentsTable extends Migration
         Schema::create(config('social.comments.table'), function (Blueprint $table) {
             $table->id();
             $table->foreignId('parent_id')->nullable();
-            $table->foreignId('commentor_id')->nullable();
+            // $table->foreignId('commentor_id')->nullable();
+            $table->morphs('commentorable');
             $table->morphs('commentable');
             $table->text('comment');
             $table->string('guest_name')->nullable();

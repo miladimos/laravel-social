@@ -1,8 +1,8 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Miladimos\Social\Policy;
 
-use Laravelista\Comments\Comment;
+use Miladimos\Social\Models\Comment;
 
 class CommentPolicy
 {

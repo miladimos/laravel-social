@@ -8,18 +8,12 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Like extends Model
 {
-//    protected $table = config('social.likes.table', 'likes');
-    protected $table = 'likes';
-
-    // protected $fillable = ['user_id', 'likeable_id', 'likeable_type'];
+   protected $table = config('social.likes.table', 'likes');
 
     protected $guarded = [];
 
     public $timestamps = true;
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         $this->table = \config('like.likes_table');
@@ -47,28 +41,16 @@ class Like extends Model
         return $this->morphTo();
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user()
     {
         return $this->belongsTo(\config('auth.providers.users.model'), \config('like.user_foreign_key'));
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function liker()
     {
         return $this->user();
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string                                $type
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
     public function scopeWithType(Builder $query, string $type)
     {
         return $query->where('likeable_type', app($type)->getMorphClass());
