@@ -18,7 +18,7 @@ return [
 
     ],
 
-    'bookmark' => [
+    'bookmarks' => [
 
         'table' => 'bookmarks',
 

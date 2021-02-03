@@ -2,6 +2,7 @@
 
 namespace Miladimos\Social\Traits\Like;
 
+use Illuminate\Database\Eloquent\Model;
 use  Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait Bookmarkable

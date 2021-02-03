@@ -8,23 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait CanBookmark
 {
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $object
-     *
-     * @return Bookmark
-     */
+
     public function bookmark(Model $object): Bookmark
     {
         $attributes = [
             'bookmarkable_type' => $object->getMorphClass(),
             'bookmarkable_id' => $object->getKey(),
-            config('social.bookmark.user_foreign_key') => $this->getKey(),
+            config('social.bookmarks.user_foreign_key') => $this->getKey(),
         ];
 
-        /* @var \Illuminate\Database\Eloquent\Model $bookmark */
-        $bookmark = \app(config('social.bookmark.model'));
+        $bookmark = \app(config('social.bookmarks.model'));
 
-        /* @var \Overtrue\LaravelBookmark\Traits\Bookmarkable|\Illuminate\Database\Eloquent\Model $object */
         return $bookmark->where($attributes)->firstOr(
             function () use ($bookmark, $attributes) {
                 $bookmark->unguard();
@@ -40,11 +34,10 @@ trait CanBookmark
 
     public function unbookmark(Model $object): bool
     {
-        /* @var \Overtrue\LaravelBookmark\Bookmark $relation */
-        $relation = \app(config('social.bookmark.model'))
+        $relation = \app(config('social.bookmarks.model'))
             ->where('bookmarkable_id', $object->getKey())
             ->where('bookmarkable_type', $object->getMorphClass())
-            ->where(config('social.bookmark.user_foreign_key'), $this->getKey())
+            ->where(config('social.bookmarks.user_foreign_key'), $this->getKey())
             ->first();
 
         if ($relation) {
@@ -58,22 +51,11 @@ trait CanBookmark
         return true;
     }
 
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $object
-     *
-     * @return Bookmark|null
-     * @throws \Exception
-     */
     public function toggleBookmark(Model $object)
     {
         return $this->hasBookmarkd($object) ? $this->unbookmark($object) : $this->bookmark($object);
     }
 
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $object
-     *
-     * @return bool
-     */
     public function hasBookmarkd(Model $object): bool
     {
         return ($this->relationLoaded('bookmarks') ? $this->bookmarks : $this->bookmarks())
@@ -84,6 +66,6 @@ trait CanBookmark
 
     public function bookmarks(): HasMany
     {
-        return $this->hasMany(config('social.bookmark.model'), config('social.bookmark.user_foreign_key'), $this->getKeyName());
+        return $this->hasMany(config('social.bookmarks.model'), config('social.bookmarks.user_foreign_key'), $this->getKeyName());
     }
 }
