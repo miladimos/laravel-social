@@ -1,8 +1,9 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Miladimos\Social\Traits\Comment;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Eloquent\Model;
 
 trait Commentable
 {
