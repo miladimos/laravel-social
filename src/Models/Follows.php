@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Follows extends Model
 {
-    //    protected $table = config('social.likes.table', 'likes');
-    protected $table = 'likes';
+    protected $table = config('social.follows.table');
 
     protected $guarded = [];
 

@@ -5,17 +5,13 @@ namespace Miladimos\Social\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Overtrue\LaravelBookmark\Events\Bookmarkd;
-use Overtrue\LaravelBookmark\Events\UnBookmark;
+
 
 class Bookmark extends Model
 {
-    protected $guarded = [];
+    protected $table = config('social.bookmarks.table');
 
-    protected $dispatchesEvents = [
-        'created' => Bookmarkd::class,
-        'deleted' => UnBookmark::class,
-    ];
+    protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {

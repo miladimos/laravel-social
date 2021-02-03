@@ -3,5 +3,5 @@ namespace Miladimos\Social;
 
 class Social
 {
-
+    //
 }

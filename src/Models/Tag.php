@@ -29,7 +29,6 @@ class Like extends Model
             $userForeignKey = \config('like.user_foreign_key');
             $like->{$userForeignKey} = $like->{$userForeignKey} ?: auth()->id();
 
-
             if (\config('like.uuids')) {
                 $like->{$like->getKeyName()} = $like->{$like->getKeyName()} ?: (string) Str::orderedUuid();
             }

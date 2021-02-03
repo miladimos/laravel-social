@@ -16,7 +16,7 @@ class Like extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->table = \config('social.likes.table');
+        $this->table = config('social.likes.table');
 
         parent::__construct($attributes);
     }
@@ -26,11 +26,11 @@ class Like extends Model
         parent::boot();
 
         self::saving(function ($like) {
-            $userForeignKey = \config('like.user_foreign_key');
+            $userForeignKey = config('like.user_foreign_key');
             $like->{$userForeignKey} = $like->{$userForeignKey} ?: auth()->id();
 
 
-            if (\config('like.uuids')) {
+            if (config('like.uuids')) {
                 $like->{$like->getKeyName()} = $like->{$like->getKeyName()} ?: (string) Str::orderedUuid();
             }
         });
@@ -43,9 +43,8 @@ class Like extends Model
 
     public function user()
     {
-        return $this->belongsTo(\config('auth.providers.users.model'), \config('like.user_foreign_key'));
+        return $this->belongsTo(config('auth.providers.users.model'), config('like.user_foreign_key'));
     }
-
 
     public function liker()
     {
