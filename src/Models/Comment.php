@@ -5,6 +5,8 @@ namespace Miladimos\Social\Models;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Comment extends Model
 {
@@ -18,7 +20,7 @@ class Comment extends Model
         'approved' => 'boolean'
     ];
 
-    public function commentable()
+    public function commentable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -26,16 +28,16 @@ class Comment extends Model
     /**
      * The user who posted the comment.
      */
-    public function commentorable()
+    public function commentorable(): MorphTo
     {
         return $this->morphTo();
     }
 
 
-    public function commentator()
-    {
-        return $this->belongsTo($this->getAuthModelName(), 'commentor_id');
-    }
+    // public function commentator()
+    // {
+    //     return $this->belongsTo($this->getAuthModelName(), 'commentor_id');
+    // }
 
     protected function getAuthModelName()
     {
@@ -55,22 +57,22 @@ class Comment extends Model
         return $this->hasMany(Config::get('social.comments.model'), 'parent_id');
     }
 
-    public function hasChildren()
-    {
-        return $this->children()->count() > 0;
-    }
+    // public function hasChildren()
+    // {
+    //     return $this->children()->count() > 0;
+    // }
 
-    public function getChildren($columns = ['*'])
-    {
-        return $this->children()->get($columns);
-    }
+    // public function getChildren($columns = ['*'])
+    // {
+    //     return $this->children()->get($columns);
+    // }
 
     public function parent()
     {
         return $this->belongsTo(Config::get('social.comments.model'), 'parent_id');
     }
 
-    public function scopeApproved($query, $approved)
+    public function scopeApproved(Builder $query, $approved): Builder
     {
         return $query->where('approved', $approved);
     }
@@ -78,5 +80,13 @@ class Comment extends Model
     public function setCommentAttribute($value)
     {
         $this->attributes['comment'] = str_replace(PHP_EOL, "<br>", $value);
+    }
+
+    public function approve(): self
+    {
+        $this->approved = true;
+        $this->save();
+
+        return $this;
     }
 }
