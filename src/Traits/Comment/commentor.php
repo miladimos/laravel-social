@@ -3,28 +3,34 @@
 namespace Miladimos\Social\Traits\Comment;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Commentor
 {
+
     public function comments()
     {
-        return $this->morphMany(Config::get('social.comments.model'), 'commentor');
+        return $this->commentsRelation();
+    }
+
+    public function commentsRelation(): HasMany
+    {
+        return $this->hasMany(config('social.comments.model'));
     }
 
     public function approvedComments()
     {
-        return $this->morphMany(Config::get('social.comments.model'), 'commentor')->where('approved', true);
+        return $this->morphMany(config('social.comments.model'), 'commentor')->where('approved', true);
     }
 
-    public function needsCommentApproval($model): bool
+    public function needsCommentApproval(): bool
     {
         return true;
     }
 
     public function comment(Commentable $commentable, string $commentText = '', int $rate = 0): Comment
     {
-        $commentModel = config('comment.model');
+        $commentModel = config('social.comments.model');
 
         $comment = new $commentModel([
             'comment'        => $commentText,
@@ -42,11 +48,6 @@ trait Commentor
     public function canCommentWithoutApprove(): bool
     {
         return false;
-    }
-
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(config('comment.model'), 'commented');
     }
 
     public function hasCommentsOn(Commentable $commentable): bool

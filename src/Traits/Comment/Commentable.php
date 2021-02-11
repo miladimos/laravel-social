@@ -16,7 +16,15 @@ trait Commentable
         });
     }
 
+     /**
+     * @return \App\Models\Comment[]
+     */
     public function comments()
+    {
+        return $this->commentsRelation();
+    }
+
+    public function commentsRelation(): MorphMany
     {
         return $this->morphMany(config('social.comments.model'), 'commentable');
     }
@@ -26,9 +34,9 @@ trait Commentable
         return $this->morphMany(Config::get('social.comments.model'), 'commentable')->where('approved', true);
     }
 
-    public function comment(string $comment)
+    public function comment(string $comment, $guard = 'web')
     {
-        return $this->commentAsUser(auth()->user(), $comment);
+        return $this->commentAsUser(auth($guard)->user(), $comment);
     }
 
     public function commentAsUser(?Model $user, string $comment)
@@ -44,11 +52,6 @@ trait Commentable
         ]);
 
         return $this->comments()->save($comment);
-    }
-
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(config('comment.model'), 'commentable');
     }
 
     public function canBeRated(): bool
