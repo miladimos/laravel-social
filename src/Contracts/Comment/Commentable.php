@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace Actuallymab\LaravelComment\Contracts;
+namespace Miladimos\Social\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
