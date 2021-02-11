@@ -44,13 +44,13 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id', 'id');
     }
 
-    /**
-     * Get all of the books that are assigned this tag.
-     */
-    public function books()
-    {
-        return $this->morphedByMany(Book::class, 'categoriable', 'categoriables');
-    }
+    // /**
+    //  * Get all of the books that are assigned this tag.
+    //  */
+    // public function books()
+    // {
+    //     return $this->morphedByMany(Book::class, 'categoriable', 'categoriables');
+    // }
 
     /**
      * Return the sluggable configuration array for this model.
