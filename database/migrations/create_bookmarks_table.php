@@ -13,11 +13,11 @@ class CreateBookmarksTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('social.subscription.subscriptions_table'), function (Blueprint $table) {
+        Schema::create(config('social.bookmarks.table'), function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(config('favorite.user_foreign_key'))->index()->comment('user_id');
-            $table->morphs('favoriteable');
-            $table->unique(['likeable_id', 'likeable_type'], 'subscription');
+            $table->unsignedBigInteger(config('social.bookmarks.bookmarker_foreign_key'))->index()->comment('user_id');
+            $table->morphs(config('social.bookmarks.morphs'));
+            $table->unique(['bookmarkable_id', 'bookmarkable_type'], 'subscription');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateBookmarksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('social.subscription.subscriptions_table'));
+        Schema::dropIfExists(config('social.bookmarks.table'));
     }
 }

@@ -17,21 +17,25 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->foreignId('parent_id')->defualt(0);
             $table->string('title')->unique();
+            $table->string('slug')->unique();
+            $table->boolean('active')->default(config('social.categories.default_active'));
             $table->timestamps();
 
             $table->foreign('parent_id')
             ->references('id')
             ->on(config('social.categories.table'))
+            ->onUpdate('cascade')
             ->onDelete('cascade');
         });
 
         Schema::create('categoriables', function (Blueprint $table) {
-            $table->integer('tag_id')->unsigned();
-            $table->morphs('taggable');
+            $table->integer('category_id')->unsigned();
+            $table->morphs(config('social.categories.morphs'));
 
-            $table->foreign('tag_id')
+            $table->foreign('category_id')
                 ->references('id')
                 ->on(config('social.categories.table'))
+                >onUpdate('cascade')
                 ->onDelete('cascade');
         });
     }
@@ -43,7 +47,7 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('social.categories.categories_table'));
-        Schema::dropIfExists('taggables');
+        Schema::dropIfExists(config('social.categories.table'));
+        Schema::dropIfExists(config('social.categories.morphs'));
     }
 }

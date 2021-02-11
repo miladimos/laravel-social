@@ -25,6 +25,19 @@ return [
         'model' => Miladimos\Social\Models\Bookmark::class,
 
         'morphs' => 'bookmarkable',
+
+        'bookmarker_foreign_key' => 'user_id',
+    ],
+
+    'categories' => [
+
+        'table' => 'categories',
+
+        'model' => Miladimos\Social\Models\Category::class,
+
+        'morphs' => 'categoriable',
+
+        'default_active' => true,
     ],
 
     'comments' => [

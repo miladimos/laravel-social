@@ -15,8 +15,8 @@ class CreateFollowsTable extends Migration
     {
         Schema::create(config('social.follows.table'), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('following_id')->index();
             $table->foreignId('follower_id')->index();
+            $table->foreignId('following_id')->index();
             $table->timestamp('accepted_at')->nullable()->index();
             $table->unique(['likeable_id', 'likeable_type'], 'follows');
         });
