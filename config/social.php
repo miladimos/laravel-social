@@ -8,6 +8,8 @@ return [
 
         'table' => 'likes',
 
+        'pivot_table' => 'taggables',
+
         'counter_model' => Miladimos\Social\Models\LikeCounter::class,
 
         'counter_table' => 'like_counters',
@@ -32,6 +34,8 @@ return [
     'categories' => [
 
         'table' => 'categories',
+
+        'pivot_table' => 'categoriables',
 
         'model' => Miladimos\Social\Models\Category::class,
 
@@ -59,20 +63,23 @@ return [
 
     'follows' => [
 
-        'follows_table' => 'follows',
+        'table' => 'follows',
 
         'morphs' => 'followable',
 
-        'follow_model' => Miladimos\Social\Models\Follows::class,
+        'model' => Miladimos\Social\Models\Follows::class,
     ],
 
     'subscriptions' => [
 
-        'subscriptions_table' => 'subscriptions',
+        'table' => 'subscriptions',
 
         'morphs' => 'subscriptionable',
 
-        'subscription_model' => Miladimos\Social\Models\Subscription::class,
+        'model' => Miladimos\Social\Models\Subscription::class,
+
+        'subscriber_foreign_key' => 'user_id',
+
     ],
 
 ];

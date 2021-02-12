@@ -13,13 +13,11 @@ class CreateSubscriptionTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('social.subscription.subscriptions_table'), function (Blueprint $table) {
+        Schema::create(config('social.subscription.table'), function (Blueprint $table) {
             $table->id();
-            $table->foreignId(config('social.subscription.user_id'))->index()->comment('user_id');
+            $table->foreignId(config('social.subscription.subscriber_foreign_key'))->index()->comment('user_id');
             $table->morphs(config('social.subscription.morphs'));
             $table->timestamps();
-
-            $table->unique(['likeable_id', 'likeable_type'], 'subscription');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateSubscriptionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('social.subscription.subscriptions_table'));
+        Schema::dropIfExists(config('social.subscription.table'));
     }
 }

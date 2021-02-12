@@ -11,7 +11,7 @@ class CreateCommentsTable extends Migration
     {
         Schema::create(config('social.comments.table'), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->nullable();
+            $table->foreignId('parent_id')->default(0);
             // $table->foreignId('commentor_id')->nullable();
             $table->morphs('commentorable');
             $table->morphs('commentable');
@@ -27,10 +27,6 @@ class CreateCommentsTable extends Migration
             $table->foreign('parent_id')
                 ->references('id')
                 ->on(config('social.comments.table'))->onDelete('cascade')->onUpdate('cascade');
-
-            $table->foreign('commentor_id')
-                ->references('id')
-                ->on(config('social.comments.users_table'))->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

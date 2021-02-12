@@ -15,20 +15,20 @@ class CreateTagsTable extends Migration
     {
         Schema::create(config('social.tags.table'), function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->morphs(config('social.tags.morphs'));
             $table->timestamps();
 
             $table->unique(['tagable_id', 'tagable_type'], 'tags');
         });
 
-        Schema::create('taggables', function (Blueprint $table) {
-            $table->integer('tag_id')->unsigned();
-            $table->morphs('taggable');
+        Schema::create(config('social.tags.pivot_table'), function (Blueprint $table) {
+            $table->unsignedBigInteger('tag_id');
+            $table->morphs(config('social.tags.morphs'));
 
             $table->foreign('tag_id')
                 ->references('id')
-                ->on('tags')
+                ->on(config('social.tags.table'))
                 ->onDelete('cascade');
         });
     }
@@ -41,6 +41,6 @@ class CreateTagsTable extends Migration
     public function down()
     {
         Schema::dropIfExists(config('social.tags.table'));
-        Schema::dropIfExists('taggables');
+        Schema::dropIfExists(config('social.tags.pivot_table'));
     }
 }

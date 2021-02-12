@@ -13,7 +13,7 @@ class CreateLikeCountersTable extends Migration
      */
     public function up()
     {
-        Schema::create('like_counters', function (Blueprint $table) {
+        Schema::create(config('social.follows.counter_table'), function (Blueprint $table) {
             $table->id();
             $table->string('likeable_id', 36);
             $table->string('likeable_type', 255);
@@ -29,6 +29,6 @@ class CreateLikeCountersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('like_counters');
+        Schema::dropIfExists(config('social.follows.counter_table'));
     }
 }

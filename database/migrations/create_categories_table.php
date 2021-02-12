@@ -17,25 +17,25 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->foreignId('parent_id')->defualt(0);
             $table->string('title')->unique();
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->boolean('active')->default(config('social.categories.default_active'));
             $table->timestamps();
 
             $table->foreign('parent_id')
-            ->references('id')
-            ->on(config('social.categories.table'))
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->references('id')
+                ->on(config('social.categories.table'))
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
 
-        Schema::create('categoriables', function (Blueprint $table) {
-            $table->integer('category_id')->unsigned();
+        Schema::create(config('social.categories.pivot_table'), function (Blueprint $table) {
+            $table->unsignedBigInteger('category_id');
             $table->morphs(config('social.categories.morphs'));
 
             $table->foreign('category_id')
                 ->references('id')
                 ->on(config('social.categories.table'))
-                >onUpdate('cascade')
+                ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
     }
@@ -48,6 +48,6 @@ class CreateCategoriesTable extends Migration
     public function down()
     {
         Schema::dropIfExists(config('social.categories.table'));
-        Schema::dropIfExists(config('social.categories.morphs'));
+        Schema::dropIfExists(config('social.categories.pivot_table'));
     }
 }

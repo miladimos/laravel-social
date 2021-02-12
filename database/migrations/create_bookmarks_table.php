@@ -17,7 +17,6 @@ class CreateBookmarksTable extends Migration
             $table->id();
             $table->unsignedBigInteger(config('social.bookmarks.bookmarker_foreign_key'))->index()->comment('user_id');
             $table->morphs(config('social.bookmarks.morphs'));
-            $table->unique(['bookmarkable_id', 'bookmarkable_type'], 'subscription');
         });
     }
 
