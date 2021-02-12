@@ -1,6 +1,6 @@
 {
     "name": "miladimos/laravel-social",
-    "description": "a powerful and simple toolkit for social networks",
+    "description": "a full and simple toolkit for social networks",
     "homepage": "https://github.com/miladimos/laravel-social",
     "type": "library",
     "keywords": [
@@ -13,7 +13,12 @@
         "lumen support",
         "like",
         "subscribe",
-        "bookmark"
+        "bookmark",
+        "laravel-like",
+        "laravel-follow",
+        "laravel-bookmark",
+        "laravel-comment"
+
     ],
     "authors": [
         {
@@ -35,6 +40,12 @@
             ]
         }
     },
-    "require": {},
+    "require": {
+        "php": ">=7.2",
+        "illuminate/support": "^7",
+        "nesbot/carbon": "^2.41",
+        "ramsey/uuid": "^4.1",
+        "webpatser/laravel-uuid": "^3.0"
+    },
     "license": "MIT"
 }
