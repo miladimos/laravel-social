@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Like extends Model
 {
-    protected $table = config('social.likes.table', 'likes');
+    protected $table;
 
     protected $guarded = [];
 
@@ -16,7 +16,7 @@ class Like extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->table = config('social.likes.table');
+        $this->table = config('social.likes.table', 'likes');
 
         parent::__construct($attributes);
     }
