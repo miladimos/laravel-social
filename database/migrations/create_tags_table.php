@@ -16,7 +16,9 @@ class CreateTagsTable extends Migration
         Schema::create(config('social.tags.table'), function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->morphs(config('social.tags.morphs'));
+            $table->boolean('active')->default(config('social.tags.default_active'));
             $table->timestamps();
 
             $table->unique(['tagable_id', 'tagable_type'], 'tags');

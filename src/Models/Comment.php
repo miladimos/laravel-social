@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Comment extends Model
 {
-    protected $table = config('social.comments.table');
+    protected $table = 'comments';
 
     protected $guarded = [];
 
@@ -82,7 +82,7 @@ class Comment extends Model
         $this->attributes['comment'] = str_replace(PHP_EOL, "<br>", $value);
     }
 
-      /**
+    /**
      * @return bool
      */
     public function hasChildren(): bool

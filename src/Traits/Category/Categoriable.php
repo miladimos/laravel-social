@@ -2,6 +2,7 @@
 
 namespace Miladimos\Social\Traits\Category;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait Categoriable
 {
@@ -14,9 +15,6 @@ trait Categoriable
     //     });
     // }
 
-    /**
-     * @return \App\Models\Comment[]
-     */
     public function categories()
     {
         return $this->categoriesRelation();
@@ -39,7 +37,7 @@ trait Categoriable
     //     $this->CategoriesRelation()->detach();
     // }
 
-     /**
+    /**
      * @return string
      */
     public function categorizableModel(): string
@@ -66,8 +64,8 @@ trait Categoriable
     public function categoriesList(): array
     {
         return $this->categories()
-                    ->pluck('name', 'id')
-                    ->toArray();
+            ->pluck('name', 'id')
+            ->toArray();
     }
 
 
@@ -100,18 +98,12 @@ trait Categoriable
         $this->categories()->detach($this->getStoredCategory($category));
     }
 
-    /**
-     * @param $categories . list of params or an array of parameters
-     *
-     * @return mixed
-     */
     public function syncCategories(...$categories)
     {
         $this->categories()->detach();
 
         return $this->attachCategory($categories);
     }
-
 
     /**
      * @param $categories . list of params or an array of parameters
@@ -191,5 +183,4 @@ trait Categoriable
 
         return $category;
     }
-
 }

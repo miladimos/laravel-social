@@ -2,6 +2,7 @@
 
 namespace Miladimos\Social\Traits\Tag;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait Tagable
 {
@@ -15,7 +16,7 @@ trait Tagable
     // }
 
     /**
-     * @return \App\Models\Comment[]
+     * @return \App\Models\Tag[]
      */
     public function tags()
     {

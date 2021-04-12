@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Follows extends Model
 {
-    protected $table = config('social.follows.table');
+    protected $table = 'follows';
 
     protected $guarded = [];
 
     public $timestamps = true;
 
-    public function likeable()
+    public function followable()
     {
         return $this->morphTo();
     }

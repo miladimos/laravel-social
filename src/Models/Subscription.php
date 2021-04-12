@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Subscription extends Model
 {
-    protected $table = config('social.subscriptions.table', 'subscriptions');
+    protected $table = 'subscriptions';
 
     protected $guarded = [];
 
@@ -19,7 +19,7 @@ class Subscription extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->table = config('social.subscribtions.table');
+        $this->table = config('social.subscriptions.table');
 
         parent::__construct($attributes);
     }
@@ -29,10 +29,10 @@ class Subscription extends Model
         parent::boot();
 
         self::saving(function (Subscription $subscription) {
-            $userForeignKey = \config('social.subscribtions.user_foreign_key');
+            $userForeignKey = \config('social.subscriptions.user_foreign_key');
             $subscription->{$userForeignKey} = $subscription->{$userForeignKey} ?: auth()->id();
 
-            if (\config('social.subscribtions.uuids')) {
+            if (\config('social.subscriptions.uuids')) {
                 $subscription->{$subscription->getKeyName()} = $subscription->{$subscription->getKeyName()} ?: (string) Str::orderedUuid();
             }
         });
@@ -45,7 +45,7 @@ class Subscription extends Model
 
     public function user()
     {
-        return $this->belongsTo(config('auth.providers.users.model'), config('social.subscribtions.user_foreign_key'));
+        return $this->belongsTo(config('auth.providers.users.model'), config('social.subscriptions.user_foreign_key'));
     }
 
     public function subscriber()

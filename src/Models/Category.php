@@ -3,10 +3,12 @@
 namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Category extends Model
 {
-    protected $table;
+    protected $table = 'categories';
 
     protected $guarded = [];
 
@@ -63,7 +65,7 @@ class Category extends Model
         ];
     }
 
-      /**
+    /**
      * @return mixed
      */
     public function categories(): MorphTo

@@ -5,7 +5,6 @@ namespace Miladimos\Social\Providers;
 use Illuminate\Support\ServiceProvider;
 use Miladimos\Social\Social;
 
-
 class SocialServiceProvider extends ServiceProvider
 {
 

@@ -4,6 +4,7 @@ namespace Miladimos\Social\Traits\Comment;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Commentable
 {
@@ -45,7 +46,7 @@ trait Commentable
 
         $comment = new $commentClass([
             'comment' => $comment,
-            'approved' => ($user instanceof Commentator) ? !$user->needsCommentApproval($this) : false,
+            'approved' => ($user instanceof User) ? !$user->needsCommentApproval($this) : false,
             'commentor_id' => is_null($user) ? null : $user->getKey(),
             'commentable_id' => $this->getKey(),
             'commentable_type' => get_class(),

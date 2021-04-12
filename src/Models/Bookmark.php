@@ -9,13 +9,13 @@ use Illuminate\Support\Str;
 
 class Bookmark extends Model
 {
-    protected $table = config('social.bookmarks.table');
+    protected $table = 'bookmarks';
 
     protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {
-        $this->table = \config('favorite.favorites_table');
+        $this->table = \config('social.bookmarks.table');
 
         parent::__construct($attributes);
     }
@@ -24,12 +24,12 @@ class Bookmark extends Model
     {
         parent::boot();
 
-        self::saving(function ($favorite) {
-            $userForeignKey = \config('favorite.user_foreign_key');
-            $favorite->{$userForeignKey} = $favorite->{$userForeignKey} ?: auth()->id();
+        self::saving(function ($bookmark) {
+            $userForeignKey = \config('social.bookmarks.user_foreign_key');
+            $bookmark->{$userForeignKey} = $bookmark->{$userForeignKey} ?: auth()->id();
 
-            if (\config('favorite.uuids')) {
-                $favorite->{$favorite->getKeyName()} = $favorite->{$favorite->getKeyName()} ?: (string) Str::orderedUuid();
+            if (\config('social.bookmarks.uuids')) {
+                $bookmark->{$bookmark->getKeyName()} = $bookmark->{$bookmark->getKeyName()} ?: (string) Str::orderedUuid();
             }
         });
     }
@@ -37,7 +37,7 @@ class Bookmark extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function favoriteable()
+    public function bookmarkable()
     {
         return $this->morphTo();
     }
@@ -47,13 +47,13 @@ class Bookmark extends Model
      */
     public function user()
     {
-        return $this->belongsTo(\config('auth.providers.users.model'), \config('favorite.user_foreign_key'));
+        return $this->belongsTo(\config('auth.providers.users.model'), \config('social.bookmarks.user_foreign_key'));
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function favoriter()
+    public function bookmarkr()
     {
         return $this->user();
     }
@@ -66,6 +66,6 @@ class Bookmark extends Model
      */
     public function scopeWithType(Builder $query, string $type)
     {
-        return $query->where('favoriteable_type', app($type)->getMorphClass());
+        return $query->where('social.bookmarksable_type', app($type)->getMorphClass());
     }
 }

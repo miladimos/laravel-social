@@ -1,6 +1,6 @@
 <?php
 
-namespace Miladimos\Social\Traits\Like;
+namespace Miladimos\Social\Traits\Bookmark;
 
 use Illuminate\Database\Eloquent\Model;
 use  Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,11 +10,11 @@ trait Bookmarkable
     public function isBookmarkedBy(Model $user): bool
     {
         if (\is_a($user, config('auth.providers.users.model'))) {
-            if ($this->relationLoaded('likers')) {
-                return $this->likers->contains($user);
+            if ($this->relationLoaded('bookmarks')) {
+                return $this->bookmarks->contains($user);
             }
 
-            return $this->likers()->where(\config('social.bookmarks.user_foreign_key'), $user->getKey())->exists();
+            return $this->bookmarks()->where(\config('social.bookmarks.user_foreign_key'), $user->getKey())->exists();
         }
 
         return false;
@@ -25,14 +25,14 @@ trait Bookmarkable
         return $this->belongsToMany(
             config('auth.providers.users.model'),
             config('social.bookmarks.table'),
-            'likeable_id',
+            'bookmark_id',
             config('social.bookmarks.user_foreign_key')
         )
-            ->where('likeable_type', $this->getMorphClass());
+            ->where('bookmark_type', $this->getMorphClass());
     }
 
 
- /**
+    /**
      * Check if the authenticated user has favorited the article.
      * We make use of lazy loading if the relationship is not already loaded.
      *
@@ -40,11 +40,11 @@ trait Bookmarkable
      */
     public function getFavoritedAttribute()
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             return false;
         }
 
-        if (! $this->relationLoaded('favorited')) {
+        if (!$this->relationLoaded('favorited')) {
             $this->load(['favorited' => function ($query) {
                 $query->where('user_id', auth()->id());
             }]);
@@ -52,7 +52,7 @@ trait Bookmarkable
 
         $favorited = $this->getRelation('favorited');
 
-        if (! empty($favorited) && $favorited->contains('id', auth()->id())) {
+        if (!empty($favorited) && $favorited->contains('id', auth()->id())) {
             return true;
         }
 
@@ -91,6 +91,6 @@ trait Bookmarkable
      */
     public function isFavoritedBy(User $user)
     {
-        return !! $this->favorited()->where('user_id', $user->id)->count();
+        return !!$this->favorited()->where('user_id', $user->id)->count();
     }
 }

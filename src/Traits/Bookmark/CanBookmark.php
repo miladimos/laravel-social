@@ -70,7 +70,7 @@ trait CanBookmark
     }
 
 
-      /**
+    /**
      * Favorite the given article.
      *
      * @param Article $article
@@ -78,8 +78,7 @@ trait CanBookmark
      */
     public function favorite(Article $article)
     {
-        if (! $this->hasFavorited($article))
-        {
+        if (!$this->hasFavorited($article)) {
             return $this->favorites()->attach($article);
         }
     }
@@ -113,6 +112,6 @@ trait CanBookmark
      */
     public function hasFavorited(Article $article)
     {
-        return !! $this->favorites()->where('article_id', $article->id)->count();
+        return !!$this->favorites()->where('article_id', $article->id)->count();
     }
 }

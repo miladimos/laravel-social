@@ -3,12 +3,11 @@
 return [
 
     'likes' => [
-
         'model' => Miladimos\Social\Models\Like::class,
 
         'table' => 'likes',
 
-        'pivot_table' => 'taggables',
+        'pivot_table' => 'likeables',
 
         'counter_model' => Miladimos\Social\Models\LikeCounter::class,
 
@@ -17,11 +16,9 @@ return [
         'morphs' => 'likeable',
 
         'liker_foreign_key' => 'liker_id',
-
     ],
 
     'bookmarks' => [
-
         'table' => 'bookmarks',
 
         'model' => Miladimos\Social\Models\Bookmark::class,
@@ -31,8 +28,17 @@ return [
         'bookmarker_foreign_key' => 'user_id',
     ],
 
-    'categories' => [
+    'tags' => [
+        'table' => 'tags',
 
+        'model' => Miladimos\Social\Models\Tag::class,
+
+        'morphs' => 'tagable',
+
+        'default_active' => true,
+    ],
+
+    'categories' => [
         'table' => 'categories',
 
         'pivot_table' => 'categoriables',
@@ -45,7 +51,6 @@ return [
     ],
 
     'comments' => [
-
         'table' => 'comments',
 
         'model' => Miladimos\Social\Models\Comment::class,
@@ -62,7 +67,6 @@ return [
     ],
 
     'follows' => [
-
         'table' => 'follows',
 
         'morphs' => 'followable',
@@ -71,7 +75,6 @@ return [
     ],
 
     'subscriptions' => [
-
         'table' => 'subscriptions',
 
         'morphs' => 'subscriptionable',
@@ -79,7 +82,6 @@ return [
         'model' => Miladimos\Social\Models\Subscription::class,
 
         'subscriber_foreign_key' => 'user_id',
-
     ],
 
 ];
