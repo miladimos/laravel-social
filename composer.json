@@ -41,11 +41,7 @@
         }
     },
     "require": {
-        "php": ">=7.2",
-        "illuminate/support": "^7",
-        "nesbot/carbon": "^2.41",
-        "ramsey/uuid": "^4.1",
-        "webpatser/laravel-uuid": "^3.0"
+        "php": ">=7.4"
     },
     "license": "MIT"
 }
