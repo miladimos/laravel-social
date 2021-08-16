@@ -3,6 +3,7 @@
 namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Tag extends Model
 {
@@ -21,7 +22,7 @@ class Tag extends Model
         $this->table = config('social.tags.table', 'tags');
     }
 
-    public function tagables(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function tagables(): MorphTo
     {
         return $this->morphTo();
     }

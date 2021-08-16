@@ -17,12 +17,9 @@ class CreateTagsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique()->nullable();
-            $table->morphs(config('social.tags.morphs'));
             $table->boolean('active')->default(config('social.tags.default_active'));
             $table->timestamps();
-
-            $table->unique(['tagable_id', 'tagable_type'], 'tags');
-        });
+         });
 
         Schema::create(config('social.tags.pivot_table'), function (Blueprint $table) {
             $table->unsignedBigInteger('tag_id');

@@ -13,12 +13,13 @@ class SocialServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . "/../../config/social.php", 'social');
 
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
         $this->registerFacades();
     }
 
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         if ($this->app->runningInConsole()) {
 
@@ -56,7 +57,7 @@ class SocialServiceProvider extends ServiceProvider
 
         if (!class_exists('CreateLikesTable')) {
             $this->publishes([
-                __DIR__ . '/../../database/migrations/create_likes_table.php' => database_path('migrations'),
+                __DIR__ . '/../../database' => database_path('migrations'),
             ], 'migrations');
         }
 
