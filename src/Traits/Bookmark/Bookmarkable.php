@@ -2,6 +2,7 @@
 
 namespace Miladimos\Social\Traits\Bookmark;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use  Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

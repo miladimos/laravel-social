@@ -73,10 +73,10 @@ trait CanBookmark
     /**
      * Favorite the given article.
      *
-     * @param Article $article
+     * @param Model $article
      * @return mixed
      */
-    public function favorite(Article $article)
+    public function favorite(Model $article)
     {
         if (!$this->hasFavorited($article)) {
             return $this->favorites()->attach($article);
@@ -86,10 +86,10 @@ trait CanBookmark
     /**
      * Unfavorite the given article.
      *
-     * @param Article $article
+     * @param Model $article
      * @return mixed
      */
-    public function unFavorite(Article $article)
+    public function unFavorite(Model $article)
     {
         return $this->favorites()->detach($article);
     }
@@ -101,16 +101,16 @@ trait CanBookmark
      */
     public function favorites()
     {
-        return $this->belongsToMany(Article::class, 'favorites', 'user_id', 'article_id')->withTimestamps();
+        return $this->belongsToMany(Model::class, 'favorites', 'user_id', 'article_id')->withTimestamps();
     }
 
     /**
      * Check if the user has favorited the given article.
      *
-     * @param Article $article
+     * @param Model $article
      * @return bool
      */
-    public function hasFavorited(Article $article)
+    public function hasFavorited(Model $article)
     {
         return !!$this->favorites()->where('article_id', $article->id)->count();
     }
