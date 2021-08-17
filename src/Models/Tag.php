@@ -4,9 +4,12 @@ namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Miladimos\Social\Traits\HasUUID;
 
 class Tag extends Model
 {
+    use HasUUID;
+
     protected $table;
 
     protected $guarded = [];

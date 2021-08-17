@@ -5,9 +5,12 @@ namespace Miladimos\Social\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Miladimos\Social\Traits\HasUUID;
 
 class Category extends Model
 {
+    use HasUUID;
+
     protected $table = 'categories';
 
     protected $guarded = [];
@@ -34,6 +37,14 @@ class Category extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        return $this->children()->count() > 0;
+    }
+
+    /**
      * Returns a list of the children categories.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -41,6 +52,14 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
+
+    /**
+     * @return static
+     */
+    public static function findByTitle(string $name): self
+    {
+        return static::where('name', $name)->orWhere('slug', $name)->firstOrFail();
     }
 
     // /**
@@ -63,50 +82,5 @@ class Category extends Model
                 'source' => 'title'
             ]
         ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function categories(): MorphTo
-    {
-        return $this->morphTo();
-    }
-    /**
-     * @return collection
-     */
-    public function entries(string $class): MorphToMany
-    {
-        return $this->morphedByMany($class, 'model', 'categories_models');
-    }
-
-    /**
-     * @return array
-     */
-    public static function tree(): array
-    {
-        return static::get()->toTree()->toArray();
-    }
-
-    /**
-     * @return static
-     */
-    public static function findByName(string $name): self
-    {
-        return static::where('name', $name)->orWhere('slug', $name)->firstOrFail();
-    }
-
-    /**
-     * @return static
-     */
-    public static function findById(int $id): self
-    {
-        return static::findOrFail($id);
-    }
-
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()->generateSlugsFrom('name')->saveSlugsTo('slug');
     }
 }
