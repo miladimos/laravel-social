@@ -2,18 +2,24 @@
 
 namespace Miladimos\Social\Traits\Category;
 
+use Miladimos\Social\Models\Category;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait Categoriable
 {
-    // protected static function bootCategoriable()
-    // {
-    //     static::deleted(function ($categoriable) {
-    //         foreach ($categoriable->categories as $category) {
-    //             $category->delete();
-    //         }
-    //     });
-    // }
+    protected static function bootCategoriable()
+    {
+        static::deleted(function ($categoriable) {
+            foreach ($categoriable->categories as $category) {
+                $category->forceDelete();
+            }
+        });
+    }
+
+    public function categoriableModel(): string
+    {
+        return config('social.categories.model');
+    }
 
     public function categories()
     {
@@ -22,41 +28,19 @@ trait Categoriable
 
     public function categoriesRelation(): MorphToMany
     {
-        return $this->morphToMany(config('social.categories.model'), 'categoriable');
+        return $this->morphToMany($this->categoriableModel(), 'categoriable');
     }
 
-    public function syncCategories(array $categories)
+    public function syncCategories(...$categories)
     {
-        $this->save();
         $this->categoriesRelation()->sync($categories);
+        $this->save();
     }
-
 
     // public function removeCategories()
     // {
     //     $this->CategoriesRelation()->detach();
     // }
-
-    /**
-     * @return string
-     */
-    public function categorizableModel(): string
-    {
-        return config('laravel-categorizable.models.category');
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function categories(): MorphToMany
-    {
-        return $this->morphToMany(
-            $this->categorizableModel(),
-            'model',
-            'categories_models'
-        );
-    }
 
     /**
      * @return array (good choice for dropdowns)
@@ -96,13 +80,6 @@ trait Categoriable
     public function detachCategory($category)
     {
         $this->categories()->detach($this->getStoredCategory($category));
-    }
-
-    public function syncCategories(...$categories)
-    {
-        $this->categories()->detach();
-
-        return $this->attachCategory($categories);
     }
 
     /**
@@ -164,7 +141,6 @@ trait Categoriable
 
         return $categories->intersect($this->categories->pluck('name')) === $categories;
     }
-
 
     /**
      * @param $category

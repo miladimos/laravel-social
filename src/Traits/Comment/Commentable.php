@@ -23,9 +23,6 @@ trait Commentable
         return config('social.comments.need_approve') ?? true;
     }
 
-    /**
-     * @return string
-     */
     public function commentableModel(): string
     {
         return config('social.comments.model');
