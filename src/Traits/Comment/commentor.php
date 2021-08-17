@@ -2,11 +2,23 @@
 
 namespace Miladimos\Social\Traits\Comment;
 
-use Illuminate\Support\Facades\Config;
+use Miladimos\Social\Models\Comment;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Commentor
 {
+    public function mustBeCommentApprove(): bool
+    {
+        return config('social.comments.need_approve') ?? true;
+    }
+
+    /**
+     * @return string
+     */
+    public function commentableModel()
+    {
+        return config('social.comments.model');
+    }
 
     public function comments()
     {
@@ -15,22 +27,17 @@ trait Commentor
 
     public function commentsRelation(): HasMany
     {
-        return $this->hasMany(config('social.comments.model'));
+        return $this->morphMany($this->commentableModel(), 'commentorable');
     }
 
     public function approvedComments()
     {
-        return $this->morphMany(config('social.comments.model'), 'commentor')->where('approved', true);
-    }
-
-    public function needsCommentApproval(): bool
-    {
-        return true;
+        return $this->morphMany($this->commentableModel(), 'commentorable')->where('approved', true);
     }
 
     public function comment(Commentable $commentable, string $commentText = '', int $rate = 0): Comment
     {
-        $commentModel = config('social.comments.model');
+        $commentModel = $this->commentableModel();
 
         $comment = new $commentModel([
             'comment'        => $commentText,
@@ -45,12 +52,48 @@ trait Commentor
         return $comment;
     }
 
-    public function canCommentWithoutApprove(): bool
-    {
-        return false;
-    }
 
-    public function hasCommentsOn(Commentable $commentable): bool
+    //     /**
+    //  * @param $data
+    //  * @param Model      $creator
+    //  * @param Model|null $parent
+    //  *
+    //  * @return static
+    //  */
+    // public function comment($data, Model $creator, Model $parent = null)
+    // {
+    //     $commentableModel = $this->commentableModel();
+
+    //     $comment = (new $commentableModel())->createComment($this, $data, $creator);
+
+    //     if (!empty($parent)) {
+    //         $parent->appendNode($comment);
+    //     }
+
+    //     return $comment;
+    // }
+
+    // public function comment(string $comment, $guard = 'web')
+    // {
+    //     return $this->commentAsUser(auth($guard)->user(), $comment);
+    // }
+
+    // public function commentAsUser(?Model $user, string $comment)
+    // {
+    //     $commentClass = $this->commentableModel();
+
+    //     $comment = new $commentClass([
+    //         'comment' => $comment,
+    //         'approved' => ($user instanceof User) ? !$user->mustBeCommentApprove($this) : false,
+    //         'commentor_id' => is_null($user) ? null : $user->getKey(),
+    //         'commentable_id' => $this->getKey(),
+    //         'commentable_type' => get_class(),
+    //     ]);
+
+    //     return $this->comments()->save($comment);
+    // }
+
+    public function hasComments(Commentable $commentable): bool
     {
         return $this->comments()
             ->where([

@@ -64,6 +64,10 @@ return [
         'default_commentator' => config('auth.providers.users.model'),
 
         'middleware'   => ['web'],
+
+        'need_approve' => false,
+
+        'has_rate' => false,
     ],
 
     'follows' => [

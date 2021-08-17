@@ -2,6 +2,7 @@
 
 namespace Miladimos\Social\Traits\Comment;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -17,9 +18,19 @@ trait Commentable
         });
     }
 
-     /**
-     * @return \App\Models\Comment[]
+    public function mustBeCommentApprove(): bool
+    {
+        return config('social.comments.need_approve') ?? true;
+    }
+
+    /**
+     * @return string
      */
+    public function commentableModel(): string
+    {
+        return config('social.comments.model');
+    }
+
     public function comments()
     {
         return $this->commentsRelation();
@@ -27,13 +38,33 @@ trait Commentable
 
     public function commentsRelation(): MorphMany
     {
-        return $this->morphMany(config('social.comments.model'), 'commentable');
+        return $this->morphMany($this->commentableModel(), 'commentable');
     }
 
     public function approvedComments()
     {
-        return $this->morphMany(Config::get('social.comments.model'), 'commentable')->where('approved', true);
+        return $this->morphMany($this->commentableModel(), 'commentable')->where('approved', true);
     }
+
+    //     /**
+    //  * @param $data
+    //  * @param Model      $creator
+    //  * @param Model|null $parent
+    //  *
+    //  * @return static
+    //  */
+    // public function comment($data, Model $creator, Model $parent = null)
+    // {
+    //     $commentableModel = $this->commentableModel();
+
+    //     $comment = (new $commentableModel())->createComment($this, $data, $creator);
+
+    //     if (!empty($parent)) {
+    //         $parent->appendNode($comment);
+    //     }
+
+    //     return $comment;
+    // }
 
     public function comment(string $comment, $guard = 'web')
     {
@@ -46,7 +77,7 @@ trait Commentable
 
         $comment = new $commentClass([
             'comment' => $comment,
-            'approved' => ($user instanceof User) ? !$user->needsCommentApproval($this) : false,
+            'approved' => ($user instanceof User) ? !$user->mustBeCommentApprove($this) : false,
             'commentor_id' => is_null($user) ? null : $user->getKey(),
             'commentable_id' => $this->getKey(),
             'commentable_type' => get_class(),
@@ -57,17 +88,7 @@ trait Commentable
 
     public function canBeRated(): bool
     {
-        return false;
-    }
-
-    public function mustBeApproved(): bool
-    {
-        return false;
-    }
-
-    public function primaryId(): string
-    {
-        return (string)$this->getAttribute($this->primaryKey);
+        return config('social.comments.has_rate') ?? false;
     }
 
     public function averageRate(int $round = 2): float
@@ -76,7 +97,6 @@ trait Commentable
             return 0;
         }
 
-        /** @var Builder $rates */
         $rates = $this->comments()->approvedComments();
 
         if (!$rates->exists()) {
@@ -93,42 +113,6 @@ trait Commentable
         }
 
         return $this->comments()->approvedComments()->count();
-    }
-
-     /**
-     * @return string
-     */
-    public function commentableModel(): string
-    {
-        return config('laravel-commentable.model');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany($this->commentableModel(), 'commentable');
-    }
-
-    /**
-     * @param $data
-     * @param Model      $creator
-     * @param Model|null $parent
-     *
-     * @return static
-     */
-    public function comment($data, Model $creator, Model $parent = null)
-    {
-        $commentableModel = $this->commentableModel();
-
-        $comment = (new $commentableModel())->createComment($this, $data, $creator);
-
-        if (!empty($parent)) {
-            $parent->appendNode($comment);
-        }
-
-        return $comment;
     }
 
     /**
@@ -160,7 +144,7 @@ trait Commentable
     {
         $commentableModel = $this->commentableModel();
 
-        return (bool) (new $commentableModel())->deleteComment($id);
+        return (bool) (new $commentableModel())->forceDelete($id);
     }
 
     /**
@@ -168,6 +152,6 @@ trait Commentable
      */
     public function commentCount(): int
     {
-        return $this->comments->count();
+        return $this->comments()->count();
     }
 }
