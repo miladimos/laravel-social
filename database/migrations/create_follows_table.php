@@ -17,6 +17,8 @@ class CreateFollowsTable extends Migration
             $table->id();
             $table->foreignId('follower_id')->index();
             $table->foreignId('following_id')->index();
+            $table->boolean('requested')->default(false);
+            $table->boolean('accepted')->default(false);
             $table->timestamp('accepted_at')->nullable()->index();
         });
     }
