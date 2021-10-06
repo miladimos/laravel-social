@@ -35,7 +35,7 @@ class SocialServiceProvider extends ServiceProvider
     {
         $this->app->bind('social', function ($app) {
             return new Social();
-        });
+        }, true);
     }
 
     private function registerConfig()
@@ -54,43 +54,6 @@ class SocialServiceProvider extends ServiceProvider
 
     private function registerMigrations()
     {
-
-        if (!class_exists('CreateLikesTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database' => database_path('migrations'),
-            ], 'migrations');
-        }
-
-        if (!class_exists('CreateBookmarksTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database/migrations/create_bookmarks_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_bookmarks_tables.php'),
-            ], 'migrations');
-        }
-
-        if (!class_exists('CreateCategoriesTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database/migrations/create_categories_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_categories_tables.php'),
-            ], 'migrations');
-        }
-
-        if (!class_exists('CreateFollowsTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database/migrations/create_follows_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_follows_tables.php'),
-            ], 'migrations');
-        }
-
-        if (!class_exists('CreateLikeCountersTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database/migrations/create_like_counters_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_counters_tables.php'),
-            ], 'migrations');
-        }
-
-        if (!class_exists('CreateSubscriptionTable')) {
-            $this->publishes([
-                __DIR__ . '/../../database/migrations/create_subscriptions_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_subscriptions_tables.php'),
-            ], 'migrations');
-        }
-
         if (!class_exists('CreateTagsTable')) {
             $this->publishes([
                 __DIR__ . '/../../database/migrations/create_tags_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_tags_tables.php'),

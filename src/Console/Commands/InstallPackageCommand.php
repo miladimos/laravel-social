@@ -30,8 +30,8 @@ class InstallPackageCommand extends Command
             $this->publishConfig();
         }
 
-    //    $this->publishMigration();
-    //    $this->info("migrations published.");
+        //    $this->publishMigration();
+        //    $this->info("migrations published.");
 
 
         $this->info("Social Package Successfully Installed. Star me on Github :) \n");

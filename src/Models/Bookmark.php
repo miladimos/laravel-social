@@ -2,9 +2,7 @@
 
 namespace Miladimos\Social\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Miladimos\Social\Traits\HasUUID;
 
 class Bookmark extends Model

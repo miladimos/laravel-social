@@ -23,7 +23,7 @@ trait Followable
         $isPending = $user->needsToApproveFollowRequests() ?: false;
 
         if (!$this->isFollowing($user) && $this->id != $user->id) {
-            return $this->following()->attach($user);
+            return $this->followings()->attach($user);
         }
 
         $this->followings()->attach($user, [
@@ -85,17 +85,12 @@ trait Followable
      * @param Model $user
      * @return bool
      */
-    public function isFollowing($user)
+    public function isFollowing(Model $user): bool
     {
-        // return !!$this->following()->where('followed_id', $user->id)->count();
-
-
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
+        // return !!$this->followings()->where('followed_id', $user->id)->count();
 
         if ($this->relationLoaded('followings')) {
-            return $this->followings
+            return $this->followings()
                 ->where('pivot.accepted_at', '!==', null)
                 ->contains($user);
         }
@@ -112,13 +107,10 @@ trait Followable
      * @param User $user
      * @return bool
      */
-    public function isFollowedBy($user)
+    public function isFollowedBy(Model $user): bool
     {
         // return !!$this->followers()->where('follower_id', $user->id)->count();
 
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
 
         if ($this->relationLoaded('followers')) {
             return $this->followers
