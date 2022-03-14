@@ -43,4 +43,9 @@ class Bookmark extends Model
     {
         return $this->belongsTo(\config('auth.providers.users.model'), \config('social.bookmarks.user_foreign_key'));
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(BookmarkGroup::class);
+    }
 }

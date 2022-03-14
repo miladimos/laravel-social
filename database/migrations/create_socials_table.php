@@ -83,8 +83,7 @@ class CreateSocialsTable extends Migration
 
         Schema::create(config('social.follows.counter_table'), function (Blueprint $table) {
             $table->id();
-            $table->string('likeable_id', 36);
-            $table->string('likeable_type', 255);
+            $table->morphs('likeable');
             $table->unsignedBigInteger('count')->default(0);
             $table->unique(['likeable_id', 'likeable_type'], 'likes_counts');
         });

@@ -77,8 +77,6 @@ trait Followable
             ->exists();
     }
 
-
-
     /**
      * Check if a given user is following this user.
      *
@@ -110,7 +108,6 @@ trait Followable
     public function isFollowedBy(Model $user): bool
     {
         // return !!$this->followers()->where('follower_id', $user->id)->count();
-
 
         if ($this->relationLoaded('followers')) {
             return $this->followers
@@ -148,7 +145,7 @@ trait Followable
     {
         return $this->belongsToMany(
             __CLASS__,
-            \config('social.follows.relation_table', 'user_follower'),
+            config('social.follows.relation_table', 'user_follower'),
             'follower_id',
             'following_id'
         )->withPivot('accepted_at')->withTimestamps();

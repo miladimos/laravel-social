@@ -30,9 +30,16 @@ class InstallPackageCommand extends Command
             $this->publishConfig();
         }
 
-        //    $this->publishMigration();
-        //    $this->info("migrations published.");
-
+        if (!empty(File::glob(database_path('migrations\*_create_socials_table.php')))) {
+            $list  = File::glob(database_path('migrations\*_create_socials_table.php'));
+            collect($list)->each(function ($item) {
+                File::delete($item);
+                $this->warn("Deleted: " . $item);
+            });
+            $this->publishMigration();
+        } else {
+            $this->publishMigration();
+        }
 
         $this->info("Social Package Successfully Installed. Star me on Github :) \n");
         $this->info("\t\tGood Luck.");
@@ -51,48 +58,8 @@ class InstallPackageCommand extends Command
     {
         $this->call('vendor:publish', [
             '--provider' => "Miladimos\Social\Providers\SocialServiceProvider",
-            '--tag' => 'migrations',
+            '--tag' => 'social-migrations',
             '--force' => true
         ]);
     }
-
-    //     //assets
-    //     if (File::exists(public_path('social'))) {
-    //         $confirm = $this->confirm("social directory already exist. Do you want to overwrite?");
-    //         if ($confirm) {
-    //             $this->publishAssets();
-    //             $this->info("assets overwrite finished");
-    //         } else {
-    //             $this->info("skipped assets publish");
-    //         }
-    //     } else {
-    //         $this->publishAssets();
-    //         $this->info("assets published");
-    //     }
-
-    //     //migration
-    //     if (File::exists(database_path("migrations/$migrationFile"))) {
-    //         $confirm = $this->confirm("migration file already exist. Do you want to overwrite?");
-    //         if ($confirm) {
-    //             $this->publishMigration();
-    //             $this->info("migration overwrite finished");
-    //         } else {
-    //             $this->info("skipped migration publish");
-    //         }
-    //     } else {
-    //         $this->publishMigration();
-    //         $this->info("migration published");
-    //     }
-    //     $this->call('migrate');
-    // }
-
-    // private function publishAssets()
-    // {
-    //     $this->call('vendor:publish', [
-    //         '--provider' => "Miladimos\Social\Providers\SocialServiceProvider",
-    //         '--tag'      => 'assets',
-    //         '--force'    => true
-    //     ]);
-    // }
-
 }

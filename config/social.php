@@ -2,6 +2,7 @@
 
 return [
 
+    // config for miladimos/laravel-social package
     'likes' => [
         'model' => Miladimos\Social\Models\Like::class,
 
@@ -26,6 +27,13 @@ return [
         'morphs' => 'bookmarkable',
 
         'bookmarker_foreign_key' => 'user_id',
+
+        'bookmark_group' => [
+            'table' => 'bookmark_groups',
+
+            'model' => Miladimos\Social\Models\BookmarkGroup::class,
+
+        ],
     ],
 
     'tags' => [

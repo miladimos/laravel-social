@@ -20,15 +20,11 @@ class SocialServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->registerCommands();
 
-        if ($this->app->runningInConsole()) {
+        $this->registerConfig();
 
-            $this->registerCommands();
-
-            $this->registerConfig();
-
-            $this->registerMigrations();
-        }
+        $this->registerMigrations();
     }
 
     private function registerFacades()
@@ -47,17 +43,17 @@ class SocialServiceProvider extends ServiceProvider
 
     private function registerCommands()
     {
-        $this->commands([
-            InstallPackageCommand::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallPackageCommand::class,
+            ]);
+        }
     }
 
     private function registerMigrations()
     {
-        // if (!class_exists('CreateTagsTable')) {
         $this->publishes([
-            __DIR__ . '/../../database/migrations/create_tags_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_tags_tables.php'),
-        ], 'migrations');
-        // }
+            __DIR__ . '/../../database/migrations/create_socials_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_socials_tables.php'),
+        ], 'social-migrations');
     }
 }
