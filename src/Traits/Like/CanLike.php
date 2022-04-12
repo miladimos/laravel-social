@@ -4,10 +4,22 @@ namespace Miladimos\Social\Traits\Like;
 
 use Miladimos\Social\Models\Like;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait CanLike
 {
+    protected static function bootCanLike()
+    {
+        static::deleting(function ($model) {
+            $model->likes()->delete();
+        });
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(config('social.likes.model'), config('social.likes.user_foreign_key'), $this->getKeyName());
+    }
+
     public function like(Model $object): Like
     {
         $attributes = [
@@ -55,7 +67,6 @@ trait CanLike
         return $this->hasLiked($object) ? $this->unlike($object) : $this->like($object);
     }
 
-
     public function hasLiked(Model $object): bool
     {
         return ($this->relationLoaded('likes') ? $this->likes : $this->likes())
@@ -64,42 +75,10 @@ trait CanLike
             ->count() > 0;
     }
 
-    public function likes(): HasMany
+    public function likesCount(): int
     {
-        return $this->hasMany(config('social.likes.model'), config('social.likes.user_foreign_key'), $this->getKeyName());
+        return $this->likes()->count();
     }
-
-    // protected static function bootHasLikes()
-    // {
-    //     static::deleting(function ($model) {
-    //         $model->likes()->delete();
-    //     });
-    // }
-
-    // public function likedBy(User $user)
-    // {
-    //     $this->likes()->create(['user_id' => $user->id()]);
-    // }
-
-    // public function dislikedBy(User $user)
-    // {
-    //     optional($this->likes()->where('user_id', $user->id())->first())->delete();
-    // }
-
-    // public function likes(): MorphMany
-    // {
-    //     return $this->morphMany(Like::class, 'likeable');
-    // }
-
-    // public function isLikedBy(User $user): bool
-    // {
-    //     return $this->likes()->where('user_id', $user->id())->exists();
-    // }
-
-    // public function likesCount(): int
-    // {
-    //     return $this->likes()->count();
-    // }
 }
 
 // trait Favoriteable

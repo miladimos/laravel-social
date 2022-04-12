@@ -18,7 +18,6 @@ trait Likeable
         }
     }
 
-
     /**
      * Fetch the primary ID of the currently logged in user
      * @return number
@@ -210,7 +209,7 @@ trait Likeable
      */
     public static function removeLikesOnDelete()
     {
-        return isset(static::$removeLikesOnDelete)
+        return isset(static::removeLikesOnDelete())
             ? static::$removeLikesOnDelete
             : true;
     }
@@ -238,4 +237,20 @@ trait Likeable
             $q->where('user_id', '=', $userId);
         });
     }
+
+
+    // public function likedBy(User $user)
+    // {
+    //     $this->likes()->create(['user_id' => $user->id()]);
+    // }
+
+    // public function dislikedBy(User $user)
+    // {
+    //     optional($this->likes()->where('user_id', $user->id())->first())->delete();
+    // }
+
+    // public function isLikedBy(User $user): bool
+    // {
+    //     return $this->likes()->where('user_id', $user->id())->exists();
+    // }
 }

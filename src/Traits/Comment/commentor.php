@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Commentor
 {
+    public static function booted()
+    {
+        static::deleting(function ($model) {
+            $model->comments()->delete();
+        });
+    }
+
     public function mustBeCommentApprove(): bool
     {
         return config('social.comments.need_approve') ?? true;

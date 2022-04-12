@@ -3,7 +3,6 @@
 namespace Miladimos\Social\Traits\Comment;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
