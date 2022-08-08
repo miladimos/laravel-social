@@ -39,6 +39,8 @@ return [
     'tags' => [
         'table' => 'tags',
 
+        'pivot_table' => 'tagables',
+
         'model' => Miladimos\Social\Models\Tag::class,
 
         'morphs' => 'tagable',
