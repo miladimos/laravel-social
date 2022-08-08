@@ -1,16 +1,16 @@
-- [![Starts](https://img.shields.io/github/stars/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/forks)
-- [![Forks](https://img.shields.io/github/forks/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/stargazers)
-
 
 # Laravel social package
 
 A toolkit package for social networks
 
+- [![Starts](https://img.shields.io/github/stars/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/forks)
+- [![Forks](https://img.shields.io/github/forks/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/stargazers)
+
 ## Installation
 
 1. Run the command below to add this package:
 
-```
+```shell
 composer require miladimos/laravel-social
 ```
 
@@ -22,7 +22,7 @@ Miladimos\Social\Providers\SocialServiceProvider::class,
 
 3. Run the command below to install package:
 
-```
+```shell
 php artisan social:install
 ```
 
@@ -34,7 +34,9 @@ php artisan migrate
 
 ## Uses
 
-First add `Attachmentable` trait to models that you want have attachments
+ Depending on the Capabilities You want implemented, as the required traits to the right Models.
+
+### Likeable Trait
 
 ```php
 
@@ -42,19 +44,129 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravelir\Attachmentable\Traits\Attachmentable;
+use Miladimos\Social\Traits\Like\Likeable;
 
 class Post extends Model
 {
     use HasFactory,
-        Attachmentable;
+        Likeable;
+}
+
+```
+
+In the User Model:
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Miladimos\Social\Traits\Like\CanLike;
+
+class User extends Authenticatable
+{
+    use HasFactory,
+        CanLike;
+}
+
+```
+
+### Commentable Trait
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Miladimos\Social\Traits\Comment\Commentable;
+
+class Post extends Model
+{
+    use HasFactory,
+        Commentable;
+}
+
+```
+
+In the User Model:
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Miladimos\Social\Traits\Comment\Commentor;
+
+class User extends Authenticatable
+{
+    use HasFactory,
+        Commentor;
+}
+
+```
+
+### Bookmarkable Trait
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Miladimos\Social\Traits\Bookmark\Bookmarkable;
+
+class Post extends Model
+{
+    use HasFactory,
+        Bookmarkable;
+}
+
+```
+
+In the User Model:
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Miladimos\Social\Traits\Bookmark\CanBookmark;
+
+class User extends Authenticatable
+{
+    use HasFactory,
+        CanBookmark;
+}
+
+```
+
+### Followable Trait
+
+In the User Model:
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Miladimos\Social\Traits\Follow\Followable;
+
+class User extends Authenticatable
+{
+    use HasFactory,
+        Followable;
 }
 
 ```
 
 ### Methods
 
-in controllers you have these methods:
+In controllers you have these methods:
 
 ```php
 
@@ -68,7 +180,7 @@ class PostController extends Controller
     {
         $post = Post::find(1);
 
-        $post->attachments // return all attachments
+        $post->likes // return all likes
 
         
     }
@@ -76,18 +188,27 @@ class PostController extends Controller
 
 ```
 
-#### امکانات
+# TODO
+
+- Document Every Available Methods and their Usage.
+- Create a test framework to test each unit feature.
+
+## Capabilities [* Proposed, ** In Active Developement]
 
 Like
 
-Favorite
+Favorite *
+
+Tag **
+
+Category **
 
 Bookmark
 
 Follow \ Unfollow
 
-Subscribe
+Subscribe **
 
 Comment
 
-Vote / Rate System
+Vote / Rate System *
