@@ -1,8 +1,8 @@
 <?php
 
+// config for miladimos/laravel-social
 return [
 
-    // config for miladimos/laravel-social package
     'likes' => [
         'model' => Miladimos\Social\Models\Like::class,
 
