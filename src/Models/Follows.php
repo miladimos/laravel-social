@@ -4,47 +4,38 @@ namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Miladimos\Social\Traits\HasUUID;
 
 class Follows extends Model
 {
-    use HasUUID;
-
-    protected $table = 'follows';
+    protected $table;
 
     protected $guarded = [];
-
-    public $timestamps = false;
-
-    public function followable()
-    {
-        return $this->morphTo();
-    }
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->table = config('social.subscriptions.table');
+        $this->table = config('social.follows.table');
     }
 
-    public function subscribable()
+    public function followerable()
     {
         return $this->morphTo();
     }
 
-    public function subscriber()
+    public function followingable()
     {
-        return $this->user();
+        return $this->morphTo();
     }
 
-    public function user()
+    public function needApprove()
     {
-        return $this->belongsTo(config('auth.providers.users.model'), config('social.subscriptions.user_foreign_key'));
+        return false;
     }
 
-    public function scopeWithType(Builder $query, string $type)
+    public function scopeApproved($query, $s = true)
     {
-        return $query->where('subscribable_type', app($type)->getMorphClass());
+        return $query->where('approved', $s);
     }
+
 }

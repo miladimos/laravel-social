@@ -7,8 +7,6 @@ return [
     'follows' => [
         'table' => 'follows',
 
-        'morphs' => 'followable',
-
         'model' => Miladimos\Social\Models\Follows::class,
 
         'need_follows_to_approved' => false,
