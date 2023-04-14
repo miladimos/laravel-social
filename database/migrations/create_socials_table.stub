@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSocialsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -62,13 +62,6 @@ class CreateSocialsTable extends Migration
             $table->unique(['likeable_id', 'likeable_type'], 'likes_counts');
         });
 
-        Schema::create(config('social.subscription.table'), function (Blueprint $table) {
-            $table->id();
-            $table->foreignId(config('social.subscription.subscriber_foreign_key'))->index()->comment('user_id');
-            $table->morphs(config('social.subscription.morphs'));
-            $table->timestamps();
-        });
-
         Schema::create(config('social.tags.table'), function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
@@ -102,7 +95,6 @@ class CreateSocialsTable extends Migration
         Schema::dropIfExists(config('social.follows.table'));
         Schema::dropIfExists(config('social.likes.table'));
         Schema::dropIfExists(config('social.follows.counter_table'));
-        Schema::dropIfExists(config('social.subscription.table'));
         Schema::dropIfExists(config('social.tags.table'));
         Schema::dropIfExists(config('social.tags.pivot_table'));
     }

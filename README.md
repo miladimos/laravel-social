@@ -68,7 +68,7 @@ class PostController extends Controller
     {
         $post = Post::find(1);
 
-        $post->attachments // return all attachments
+        $post->likes // return all likes
 
         
     }
@@ -76,7 +76,7 @@ class PostController extends Controller
 
 ```
 
-#### امکانات
+####  Features
 
 Like
 
@@ -85,8 +85,6 @@ Favorite
 Bookmark
 
 Follow \ Unfollow
-
-Subscribe
 
 Comment
 

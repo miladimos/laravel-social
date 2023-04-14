@@ -3,6 +3,17 @@
 // config for miladimos/laravel-social
 return [
 
+    // follow/unfollow - subscription/unsubscription or ...
+    'follows' => [
+        'table' => 'follows',
+
+        'morphs' => 'followable',
+
+        'model' => Miladimos\Social\Models\Follows::class,
+
+        'need_follows_to_approved' => false,
+    ],
+
     'likes' => [
         'model' => Miladimos\Social\Models\Like::class,
 
@@ -77,25 +88,4 @@ return [
 
         'has_rate' => false,
     ],
-
-    'follows' => [
-        'table' => 'follows',
-
-        'morphs' => 'followable',
-
-        'model' => Miladimos\Social\Models\Follows::class,
-
-        'need_follows_to_approved' => false,
-    ],
-
-    'subscriptions' => [
-        'table' => 'subscriptions',
-
-        'morphs' => 'subscriptionable',
-
-        'model' => Miladimos\Social\Models\Subscription::class,
-
-        'subscriber_foreign_key' => 'user_id',
-    ],
-
 ];
