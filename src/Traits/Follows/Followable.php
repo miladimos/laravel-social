@@ -29,6 +29,9 @@ trait Followable
             'follower_id',
             'following_id'
         )->withPivot('accepted_at')->withTimestamps();
+
+        return $this->morphMany(\config('social.subscribtions.model'), 'subscribable');
+
     }
 
     public function follow($user)
@@ -83,7 +86,7 @@ trait Followable
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
-    
+
     public function isFollowing(Model $user): bool
     {
         // return !!$this->followings()->where('followed_id', $user->id)->count();
@@ -116,9 +119,63 @@ trait Followable
             ->exists();
     }
 
+    public function isSubscribedBy(Model $user)
+    {
+        if (\is_a($user, \config('auth.providers.users.model'))) {
+            if ($this->relationLoaded('subscribers')) {
+                return $this->subscribers->contains($user);
+            }
+
+            return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
+                    ->where(\config('social.subscribtions.user_foreign_key'), $user->getKey())->count() > 0;
+        }
+
+        return false;
+    }
+
     public function areFollowingEachOther($user): bool
     {
         return $this->isFollowing($user) && $this->isFollowedBy($user);
     }
 
+    public function subscribe(Model $object)
+    {
+        if (!$this->hasSubscribed($object)) {
+            $subscribe = app(config('social.subscribtions.model'));
+            $subscribe->{config('social.subscribtions.user_foreign_key')} = $this->getKey();
+
+            $object->subscriptions()->save($subscribe);
+        }
+    }
+
+    public function unsubscribe(Model $object)
+    {
+        $relation = $object->subscriptions()
+            ->where('subscribable_id', $object->getKey())
+            ->where('subscribable_type', $object->getMorphClass())
+            ->where(config('social.subscribtions.user_foreign_key'), $this->getKey())
+            ->first();
+
+        if ($relation) {
+            $relation->delete();
+        }
+    }
+
+    public function toggleSubscribe(Model $object)
+    {
+        $this->hasSubscribed($object) ? $this->unsubscribe($object) : $this->subscribe($object);
+    }
+
+    public function hasSubscribed(Model $object)
+    {
+        return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
+                ->where('subscribable_id', $object->getKey())
+                ->where('subscribable_type', $object->getMorphClass())
+                ->count() > 0;
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(config('social.subscribtions.subscription_model'), config('social.subscribtions.user_foreign_key'), $this->getKeyName());
+    }
 }
