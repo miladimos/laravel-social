@@ -4,15 +4,12 @@ namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Miladimos\Social\Traits\HasUUID;
 
 class Tag extends Model
 {
-    use HasUUID;
+    protected $table = 'tags';
 
-    protected $table;
-
-    protected $guarded = [];
+    protected $fillable = ['name', 'slug'];
 
     protected $casts = [
         'active' => 'boolean'
@@ -25,7 +22,7 @@ class Tag extends Model
         $this->table = config('social.tags.table', 'tags');
     }
 
-    public function tagables(): MorphTo
+    public function taggables(): MorphTo
     {
         return $this->morphTo();
     }

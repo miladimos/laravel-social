@@ -4,12 +4,12 @@ namespace Miladimos\Social\Traits\Tag;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-trait Tagable
+trait Taggable
 {
     protected static function booted()
     {
-        static::deleted(function ($tagable) {
-            foreach ($tagable->tags as $tag) {
+        static::deleted(function ($taggable) {
+            foreach ($taggable->tags as $tag) {
                 $tag->forceDelete();
             }
         });
@@ -22,7 +22,7 @@ trait Tagable
 
     public function tagsRelation(): MorphToMany
     {
-        return $this->morphToMany(config('social.tags.model'), 'tagables');
+        return $this->morphToMany(config('social.tags.model'), 'taggables', '');
     }
 
     public function syncTags(array $tags)

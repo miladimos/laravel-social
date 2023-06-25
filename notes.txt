@@ -8,4 +8,4 @@ https://github.com/overtrue/laravel-follow
 
 https://github.com/overtrue/laravel-favorite
 
-
+https://github.com/beyondcode/laravel-comments
