@@ -22,7 +22,19 @@ trait Taggable
 
     public function tagsRelation(): MorphToMany
     {
-        return $this->morphToMany(config('social.tags.model'), 'taggables', '');
+        return $this->morphToMany(config('social.tags.model'), config('social.tags.taggables'), config('social.tags.morphs'));
+    }
+
+    public function attach($tag)
+    {
+        $this->tagsRelation()->attach($tag);
+        $this->save();
+    }
+
+    public function detach($tag)
+    {
+        $this->tagsRelation()->detach($tag);
+        $this->save();
     }
 
     public function syncTags(array $tags)
@@ -30,4 +42,12 @@ trait Taggable
         $this->tagsRelation()->sync($tags);
         $this->save();
     }
+
+    // /**
+    //  * Get all of the books that are assigned this tag.
+    //  */
+    // public function books()
+    // {
+    //     return $this->morphedByMany(Book::class, 'tagables', 'tagabless');
+    // }
 }

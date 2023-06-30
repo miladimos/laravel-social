@@ -2,7 +2,6 @@
 
 namespace Miladimos\Social\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Follows extends Model
@@ -37,5 +36,4 @@ class Follows extends Model
     {
         return $query->where('approved', $s);
     }
-
 }

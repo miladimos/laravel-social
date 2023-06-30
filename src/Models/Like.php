@@ -2,20 +2,15 @@
 
 namespace Miladimos\Social\Models;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Miladimos\Social\Traits\HasUUID;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Like extends Model
 {
-    use HasUUID;
-
     protected $table;
 
     protected $guarded = [];
-
-    public $timestamps = false;
 
     public function __construct(array $attributes = [])
     {
@@ -24,7 +19,7 @@ class Like extends Model
         $this->table = config('social.likes.table', 'likes');
     }
 
-    public function likeable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function likeable(): MorphTo
     {
         return $this->morphTo();
     }

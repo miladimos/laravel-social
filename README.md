@@ -1,5 +1,5 @@
-- [![Starts](https://img.shields.io/github/stars/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/forks)
-- [![Forks](https://img.shields.io/github/forks/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/stargazers)
+[![Starts](https://img.shields.io/github/stars/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/forks)
+[![Forks](https://img.shields.io/github/forks/miladimos/laravel-social?style=flat&logo=github)](https://github.com/miladimos/laravel-social/stargazers)
 
 
 # Laravel social package
@@ -32,9 +32,70 @@ php artisan social:install
 php artisan migrate
 ```
 
-## Uses
+# Features
 
-First add `Attachmentable` trait to models that you want have attachments
+## Tag:
+
+First add `Taggable` trait to models that you want have tags
+
+```php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Miladimos\Social\Traits\Taggable;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    use HasFactory,
+        Taggable;
+}
+
+```
+
+Second you can work with tags:
+
+```php
+namespace App\Http\Controller;
+
+use App\Models\Post;
+use Miladimos\Social\Models\Tag;
+
+class YourController extends Controller
+{
+    public function index()
+    {   
+        // first you can create custom tags
+        $tag = Tag::create(['name' => 'tag']);   
+        
+        $post = Post::first();
+        
+        $post->tags; // return attached tags
+
+        $post->attach($tag); // attach one tag
+
+        $post->detach($tag); // detach one tag
+
+        $post->syncTags($tags); // sync tags
+
+        $tag->taggables; // return morph relation to tagged model
+    }
+}
+
+```
+tag model have soft deletes trait.
+
+
+## Like
+
+## Bookmark
+
+## Follow
+
+## Category
+
+First add `Taggable` trait to models that you want have attachments
 
 ```php
 
@@ -42,12 +103,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravelir\Attachmentable\Traits\Attachmentable;
+use Miladimos\Social\Traits\Taggable;
 
 class Post extends Model
 {
     use HasFactory,
-        Attachmentable;
+        Taggable;
 }
 
 ```

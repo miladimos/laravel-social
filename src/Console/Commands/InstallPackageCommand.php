@@ -10,7 +10,7 @@ class InstallPackageCommand extends Command
 {
     protected $signature = 'social:install';
 
-    protected $description = 'Install the Social package';
+    protected $description = 'Install the social package';
 
     public function handle()
     {
