@@ -3,19 +3,17 @@
 namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Miladimos\Social\Traits\HasUUID;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasUUID;
+    use SoftDeletes;
 
     protected $table = 'categories';
 
     protected $guarded = [];
-
-    protected $casts = [
-        'active' => 'boolean'
-    ];
 
     public function __construct()
     {
@@ -24,7 +22,7 @@ class Category extends Model
         $this->table = config('social.categories.table', 'categories');
     }
 
-    public function categoriable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function categoriable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -34,27 +32,16 @@ class Category extends Model
         return $this->hasOne(Category::class, 'id', 'parent_id')->withDefault(['title' => '---']);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasChildren()
-    {
-        return $this->children()->count() > 0;
-    }
-
-    /**
-     * Returns a list of the children categories.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function children()
+    function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
     }
 
-    /**
-     * @return static
-     */
+    public function hasChildren(): bool
+    {
+        return $this->children()->count() > 0;
+    }
+
     public static function findByTitle(string $name): self
     {
         return static::where('name', $name)->orWhere('slug', $name)->firstOrFail();

@@ -7,8 +7,6 @@ use Miladimos\Social\Traits\HasUUID;
 
 class BookmarkGroup extends Model
 {
-    use HasUUID;
-
     protected $table;
 
     protected $guarded = [];
@@ -20,8 +18,8 @@ class BookmarkGroup extends Model
         $this->table = config('social.bookmarks.bookmark_groups.table');
     }
 
-  public function bookmarks()
-  {
-      return $this->belongsToMany(Bookmark::class);
-  }
+    public function bookmarks()
+    {
+        return $this->belongsToMany(Bookmark::class);
+    }
 }
