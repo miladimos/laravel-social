@@ -7,22 +7,24 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Follows extends Model
 {
-    protected $table;
-
     protected $guarded = [];
+
+    protected $dates = ['accepted_at'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->table = config('social.follows.table');
+        $this->table = config('social.follows.table', 'social_follows');
     }
 
-    public function followerable(): MorphTo
+    // follower
+    public function followable(): MorphTo 
     {
         return $this->morphTo();
     }
 
+    // following
     public function followingable(): MorphTo
     {
         return $this->morphTo();

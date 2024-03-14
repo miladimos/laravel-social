@@ -5,12 +5,13 @@ return [
 
     'tags' => [
         'model' => Miladimos\Social\Models\Tag::class,
+        'table' => 'social_tags',
     ],
 
     // follow/unfollow - subscription/unsubscription or ...
     'follows' => [
         'model' => Miladimos\Social\Models\Follows::class,
-
+        'table' => 'social_follows',
         'need_follows_to_approved' => false,
     ],
 

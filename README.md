@@ -77,7 +77,7 @@ class YourController extends Controller
 
         $post->detach($tag); // detach one tag
 
-        $post->syncTags($tags); // sync tags
+        $post->syncTags([$tags]); // sync tags
 
         $tag->taggables; // return morph relation to tagged model
     }

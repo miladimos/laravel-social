@@ -10,16 +10,18 @@ class Tag extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'tags';
+    protected $table;
 
-    protected $fillable = ['name', 'slug', 'deleted_at'];
+    protected $guarded = [];
 
-    // public function __construct()
-    // {
-    //     parent::__construct();
+    // protected $fillable = ['name', 'slug', 'deleted_at'];
 
-    //     $this->table = config('social.tags.table', 'tags');
-    // }
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->table = config('social.tags.table', 'social_tags');
+    }
 
     public function taggable(): MorphTo
     {
