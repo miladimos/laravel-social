@@ -13,27 +13,28 @@ return new class extends Migration
      */
     public function up()
     {
-        // Schema::create(config('social.tags.table'), function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('name')->unique()->index();
-        //     $table->string('slug')->unique();
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+        Schema::create(config('social.tags.table'), function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique()->index();
+            $table->string('slug')->unique();
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        // Schema::create(config('social.tags.taggables'), function (Blueprint $table) {
-        //     $table->foreignId('tag_id');
-        //     $table->morphs(config('social.tags.morphs'));
+        Schema::create(config('social.tags.morphs_table'), function (Blueprint $table) {
+            $table->foreignId('tag_id');
+            $table->morphs(config('social.tags.morphs'));
 
-        //     $table->foreign('tag_id')
-        //         ->references('id')
-        //         ->on(config('social.tags.table'))
-        //         ->onDelete('cascade');
-        // });
+            $table->foreign('tag_id')
+                ->references('id')
+                ->on(config('social.tags.table'))
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+        });
 
         Schema::create(config('social.follows.table'), function (Blueprint $table) {
             $table->id();
-            $table->morphs('followerable'); // follower
+            $table->morphs('followable'); // follower
             $table->morphs('followingable'); // following
             $table->boolean('requested')->default(false);
             $table->timestamp('requested_at')->nullable();
@@ -42,7 +43,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        //
         //        Schema::create(config('social.bookmarks.table'), function (Blueprint $table) {
         //            $table->id();
         //            $table->unsignedBigInteger(config('social.bookmarks.bookmarker_foreign_key'))->index()->comment('user_id');
@@ -57,8 +57,8 @@ return new class extends Migration
         //            $table->text('comment');
         //            $table->string('guest_name')->nullable();
         //            $table->string('guest_email')->nullable();
-        //            $table->boolean('approved')->default(false);
-        // $table->timestamp('approved_at')->nullable();
+        //            $table->boolean('is_approved')->default(false);
+        //            $table->timestamp('approved_at')->nullable();
         //            $table->timestamps();
         //
         //            $table->index(["commentable_type", "commentable_id"]);
@@ -85,10 +85,11 @@ return new class extends Migration
      */
     public function down()
     {
-        // Schema::dropIfExists(config('social.tags.table'));
-        // Schema::dropIfExists(config('social.tags.taggables'));
-
+        Schema::dropIfExists(config('social.tags.table'));
+        Schema::dropIfExists(config('social.tags.morphs_table'));
         Schema::dropIfExists(config('social.follows.table'));
+
+        //        Schema::dropIfExists(config('social.bookmarks_group.table'));
         //        Schema::dropIfExists(config('social.bookmarks.table'));
         //        Schema::dropIfExists(config('social.categories.table'));
         //        Schema::dropIfExists(config('social.categories.pivot_table'));

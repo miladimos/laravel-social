@@ -6,6 +6,8 @@ return [
     'tags' => [
         'model' => Miladimos\Social\Models\Tag::class,
         'table' => 'social_tags',
+        'morphs' => 'taggables',
+        'morphs_table' => 'social_taggables',
     ],
 
     // follow/unfollow - subscription/unsubscription or ...

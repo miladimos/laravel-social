@@ -1,12 +1,13 @@
 <?php
 
-namespace Hypefactors\Laravel\Follow\Contracts;
+namespace Miladimos\Social\Contracts;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-interface CanBeFollowedContract
+// CanBeFollowedContract
+interface FollowingContract
 {
     /**
      * Returns the followers that this entity is associated with.

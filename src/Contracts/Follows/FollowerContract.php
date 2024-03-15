@@ -1,10 +1,11 @@
 <?php
 
-namespace Hypefactors\Laravel\Follow\Contracts;
+namespace Miladimos\Social\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
 
-interface CanFollowContract
+// CanFollowContract
+interface FollowerContract
 {
     /**
      * Returns the entities that this entity is following.

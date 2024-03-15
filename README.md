@@ -68,9 +68,9 @@ class YourController extends Controller
     {   
         // first you can create custom tags
         $tag = Tag::create(['name' => 'tag']);   
-        
+
         $post = Post::first();
-        
+
         $post->tags; // return attached tags
 
         $post->attach($tag); // attach one tag
@@ -131,7 +131,7 @@ class PostController extends Controller
 
         $post->likes // return all likes
 
-        
+
     }
 }
 
@@ -148,5 +148,22 @@ Bookmark
 Follow \ Unfollow
 
 Comment
+
+$post = Post::find(1);
+
+$post->comment('This is a comment');
+
+$post->commentAsUser($user, 'This is a comment from someone else');
+$comment = $post->comments->first();
+
+$comment->approve();
+
+Auto Approve Comments implements Commentator needsCommentApproval false
+
+// Retrieve all comments
+$comments = $post->comments;
+
+// Retrieve only approved comments
+$approved = $post->comments()->approved()->get();
 
 Vote / Rate System

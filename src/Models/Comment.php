@@ -2,7 +2,6 @@
 
 namespace Miladimos\Social\Models;
 
-use Miladimos\Social\Traits\HasUUID;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,18 +10,21 @@ use Miladimos\Social\Traits\RouteKeyNameUUID;
 
 class Comment extends Model
 {
-    use HasUUID,
-        RouteKeyNameUUID;
-
-    protected $table = 'comments';
-
     protected $guarded = [];
 
     protected $with = ['children', 'commentator', 'commentable'];
 
     protected $casts = [
-        'approved' => 'boolean'
+        'approved' => 'boolean',
+        'approved_at' => 'date'
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        $this->table = config('social.comments.table', 'social_comments');
+
+        parent::__construct($attributes);
+    }
 
     /**
      * The user who posted the comment.
@@ -34,6 +36,7 @@ class Comment extends Model
 
     /**
      * @return mixed
+     * model
      */
     public function commentable(): MorphTo
     {
@@ -77,6 +80,7 @@ class Comment extends Model
     {
         $this->update([
             'is_approved' => true,
+            'approved_at' => now(),
         ]);
 
         return $this;
@@ -86,8 +90,28 @@ class Comment extends Model
     {
         $this->update([
             'is_approved' => false,
+            'approved_at' => null,
         ]);
 
         return $this;
     }
+
+
+      // public function commentator()
+      // {
+      //     return $this->belongsTo($this->getAuthModelName(), 'user_id');
+      // }
+      //
+    protected function getAuthModelName()
+{
+    if (config('comments.user_model')) {
+        return config('comments.user_model');
+    }
+
+    if (!is_null(config('auth.providers.users.model'))) {
+        return config('auth.providers.users.model');
+    }
+
+    throw new Exception('Could not determine the commentator model name.');
+}
 }

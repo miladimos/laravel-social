@@ -17,9 +17,9 @@ class Category extends Model
 
     public function __construct()
     {
-        parent::__construct();
+        $this->table = config('social.categories.table', 'social_categories');
 
-        $this->table = config('social.categories.table', 'categories');
+        parent::__construct();
     }
 
     public function categoriable(): MorphTo

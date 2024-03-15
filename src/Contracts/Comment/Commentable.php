@@ -1,6 +1,6 @@
 <?php
 
-namespace Miladimos\Social\Contracts;
+namespace Miladimos\Social\Contracts\Comment;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 

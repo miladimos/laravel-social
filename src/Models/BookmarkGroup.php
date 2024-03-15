@@ -7,15 +7,13 @@ use Miladimos\Social\Traits\HasUUID;
 
 class BookmarkGroup extends Model
 {
-    protected $table;
-
     protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
-
         $this->table = config('social.bookmarks.bookmark_groups.table');
+
+        parent::__construct($attributes);
     }
 
     public function bookmarks()

@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Bookmark extends Model
 {
-    protected $table;
-
     protected $guarded = [];
 
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
-
         $this->table = config('social.bookmarks.table');
+
+        parent::__construct($attributes);
     }
 
     public function bookmarkable(): MorphTo
