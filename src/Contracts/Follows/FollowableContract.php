@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 // CanBeFollowedContract
-interface FollowingContract
+interface FollowableContract
 {
     /**
      * Returns the followers that this entity is associated with.

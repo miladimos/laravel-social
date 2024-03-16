@@ -5,7 +5,7 @@ namespace Miladimos\Social\Contracts;
 use Illuminate\Database\Eloquent\Collection;
 
 // CanFollowContract
-interface FollowerContract
+interface CanFollowContract
 {
     /**
      * Returns the entities that this entity is following.
@@ -26,14 +26,14 @@ interface FollowerContract
      *
      * @return bool
      */
-    public function isFollowing(CanBeFollowedContract $entity);
+    public function isFollowing(FollowableContract $entity);
 
     /**
      * Follows the given entity.
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function follow(CanBeFollowedContract $entity);
+    public function follow(FollowableContract $entity);
 
     /**
      * Follows many entities.
@@ -47,7 +47,7 @@ interface FollowerContract
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function unfollow(CanBeFollowedContract $entity);
+    public function unfollow(FollowableContract $entity);
 
     /**
      * Unfollows many entities.
@@ -61,7 +61,7 @@ interface FollowerContract
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function findFollowing(CanBeFollowedContract $entity);
+    public function findFollowing(FollowableContract $entity);
 
     /**
      * Synchronize many entities to be followed by this entity.

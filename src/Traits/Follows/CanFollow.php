@@ -24,7 +24,6 @@ trait CanFollow
         return config('social.follows.need_follows_to_approved');
     }
 
-
     public function followsModel(): string
     {
         return config('social.follows.model');
@@ -34,71 +33,109 @@ trait CanFollow
     {
         return config('social.follows.followingable_morphs');
     }
-    /**
-     * Returns the entities that this entity is following.
-     */
+
     public function followings(): MorphMany
     {
         return $this->morphMany(config('social.follows.model'), $this->followingableMorphs());
     }
 
-
-
-
-
-
-    /**
-     * Determines if the entity has followings associated.
-     */
-    public function hasFollowings(): bool
+    public function hasAnyFollowings(): bool
     {
-        return (bool) $this->followings()->withoutTrashed()->count();
+        return (bool) $this->followings()->count();
     }
 
-    /**
-     * Determines if the entity is following the given entity.
-     *
-     * @return bool
-     */
-    public function isFollowing(CanBeFollowedContract $entity)
+    public function hasAnyFollowers(): bool
     {
-        $following = $this->findFollowing($entity);
-
-        return $following && ! $following->trashed();
+        return (bool) $this->followers()->count();
     }
 
-    /**
-     * Follows the given entity.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function follow(CanBeFollowedContract $entity)
+    // FollowableContract
+    public function follow($entity)
     {
-        $following = $this->findFollowing($entity);
+      // $following = $this->findFollowing($entity);
 
-        // If the entity previously followed the entity but then unfollowed it,
-        // we still have the relationship, it just needs to be restored.
-        if ($following && $following->trashed()) {
-            $following->restore();
-        } elseif (! $following) {
-            $follower = new Follower();
-            $follower->followable_id = $entity->getKey();
-            $follower->followable_type = $entity->getMorphClass();
+        $isPending = $entity->needsToApproveFollowRequests() ?: false;
 
-            $this->followings()->save($follower);
+        if (!$this->isFollowing($entity) && $this->id != $entity->id) {
+            return $this->followings()->attach($entity);
         }
 
-        return $this->fresh();
+        $this->followings()->attach($user, [
+            'accepted_at' => $isPending ? null : now()
+        ]);
+
+        return ['pending' => $isPending];
     }
 
-    /**
-     * Follows many entities.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
+
+
+    public function findFollowing(FollowableContract $entity)
+    {
+        return $this->followings()->whereFollowableEntity($entity)->first();
+    }
+
+    public function findFollower(FollowableContract $entity)
+    {
+        return $this->followers()->whereFollowingableEntity($entity)->first();
+    }
+
+    // FollowableContract $entity
+    public function isFollowing(Model $model): bool
+    {
+        // return !!$this->followings()->where('followed_id', $model->id)->count();
+        if ($this->relationLoaded('followings')) {
+            return $this->followings()
+                ->wherePivot('accepted_at', '!=', null)
+                ->contains($model);
+        }
+
+        // return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
+        //         ->where('subscribable_id', $object->getKey())
+        //         ->where('subscribable_type', $object->getMorphClass())
+        //         ->count() > 0;
+    }
+
+    public function isFollowedBy(Model $user): bool
+    {
+        if ($this->relationLoaded('followers')) {
+            return $this->followers()
+                ->wherePivot('accepted_at', '!=', null)
+                ->contains($user);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function followMany(Collection $entities)
     {
-        $entities->each(function (CanBeFollowedContract $entity) {
+        $entities->each(function (FollowableContract $entity) {
             $this->follow($entity);
         });
 
@@ -110,7 +147,7 @@ trait CanFollow
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function unfollow(CanBeFollowedContract $entity)
+    public function unfollow(FollowableContract $entity)
     {
         $following = $this->findFollowing($entity);
 
@@ -128,21 +165,11 @@ trait CanFollow
      */
     public function unfollowMany(Collection $entities)
     {
-        $entities->each(function (CanBeFollowedContract $entity) {
+        $entities->each(function (FollowableContract $entity) {
             $this->unfollow($entity);
         });
 
         return $this->fresh();
-    }
-
-    /**
-     * Returns the given following entity record if this entity is following it.
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function findFollowing(CanBeFollowedContract $entity)
-    {
-        return $this->followings()->withTrashed()->whereFollowableEntity($entity)->first();
     }
 
     /**
@@ -154,28 +181,12 @@ trait CanFollow
     {
         $this->followings()->delete();
 
-        $entities->each(function (CanBeFollowedContract $entity) {
+        $entities->each(function (FollowableContract $entity) {
             $this->follow($entity);
         });
 
         return $this->fresh();
     }
-
-
-        public function follow($user)
-        {
-            $isPending = $user->needsToApproveFollowRequests() ?: false;
-
-            if (!$this->isFollowing($user) && $this->id != $user->id) {
-                return $this->followings()->attach($user);
-            }
-
-            $this->followings()->attach($user, [
-                'accepted_at' => $isPending ? null : now()
-            ]);
-
-            return ['pending' => $isPending];
-        }
 
         public function unfollow($user)
         {
@@ -215,66 +226,14 @@ trait CanFollow
                 ->exists();
         }
 
-        public function isFollowing(Model $user): bool
-        {
-            // return !!$this->followings()->where('followed_id', $user->id)->count();
 
-            if ($this->relationLoaded('followings')) {
-                return $this->followings()
-                    ->where('pivot.accepted_at', '!==', null)
-                    ->contains($user);
-            }
-
-            return $this->followings()
-                ->wherePivot('accepted_at', '!=', null)
-                ->where($this->getQualifiedKeyName(), $user)
-                ->exists();
-        }
-
-        public function isFollowedBy(Model $user): bool
-        {
-            // return !!$this->followers()->where('follower_id', $user->id)->count();
-
-            if ($this->relationLoaded('followers')) {
-                return $this->followers
-                    ->where('pivot.accepted_at', '!==', null)
-                    ->contains($user);
-            }
-
-            return $this->followers()
-                ->wherePivot('accepted_at', '!=', null)
-                ->where($this->getQualifiedKeyName(), $user)
-                ->exists();
-        }
-
-        public function isSubscribedBy(Model $user)
-        {
-            if (\is_a($user, \config('auth.providers.users.model'))) {
-                if ($this->relationLoaded('subscribers')) {
-                    return $this->subscribers->contains($user);
-                }
-
-                return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
-                        ->where(\config('social.subscribtions.user_foreign_key'), $user->getKey())->count() > 0;
-            }
-
-            return false;
-        }
 
         public function areFollowingEachOther($user): bool
         {
             return $this->isFollowing($user) && $this->isFollowedBy($user);
         }
 
-        public function subscribe(Model $object)
-        {
-            if (!$this->hasSubscribed($object)) {
-                $subscribe = app(config('social.subscribtions.model'));
-                $subscribe->{config('social.subscribtions.user_foreign_key')} = $this->getKey();
 
-                $object->subscriptions()->save($subscribe);
-            }
-        }
 
         public function unsubscribe(Model $object)
         {
@@ -294,35 +253,6 @@ trait CanFollow
             $this->hasSubscribed($object) ? $this->unsubscribe($object) : $this->subscribe($object);
         }
 
-        public function hasSubscribed(Model $object)
-        {
-            return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
-                    ->where('subscribable_id', $object->getKey())
-                    ->where('subscribable_type', $object->getMorphClass())
-                    ->count() > 0;
-        }
-
-        /**
-         * Determines if the entity has followers associated.
-         *
-         * @return bool
-         */
-        public function hasFollowers()
-        {
-            return (bool) $this->followers()->withoutTrashed()->count();
-        }
-
-        /**
-         * Determines if the given entity is a follower of this entity.
-         *
-         * @return bool
-         */
-        public function hasFollower(CanFollowContract $entity)
-        {
-            $follower = $this->findFollower($entity);
-
-            return (bool) $follower && ! $follower->trashed();
-        }
 
         /**
          * Adds the given entity as a follower of this entity.
