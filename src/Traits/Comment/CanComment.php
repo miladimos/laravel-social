@@ -5,7 +5,7 @@ namespace Miladimos\Social\Traits\Comment;
 use Miladimos\Social\Models\Comment;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait Commentorable
+trait CanComment
 {
     public static function booted()
     {
