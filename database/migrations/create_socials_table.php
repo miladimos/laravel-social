@@ -36,9 +36,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('followable'); // follower
             $table->morphs('followingable'); // following
-            $table->boolean('requested')->default(false);
             $table->timestamp('requested_at')->nullable();
-            $table->boolean('accepted')->default(false);
             $table->timestamp('accepted_at')->nullable();
             $table->timestamps();
         });
@@ -92,7 +90,7 @@ return new class extends Migration
         //        Schema::dropIfExists(config('social.bookmarks_group.table'));
         //        Schema::dropIfExists(config('social.bookmarks.table'));
         //        Schema::dropIfExists(config('social.categories.table'));
-        //        Schema::dropIfExists(config('social.categories.pivot_table'));
+        //        Schema::dropIfExists(config('social.categories.morphs'));
         //        Schema::dropIfExists(config('social.comments.table'));
         //        Schema::dropIfExists(config('social.likes.table'));
     }

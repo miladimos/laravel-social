@@ -4,6 +4,7 @@ namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Miladimos\Social\Models\BookmarkGroup;
 
 class Bookmark extends Model
 {

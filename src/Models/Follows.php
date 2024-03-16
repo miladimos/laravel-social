@@ -18,7 +18,6 @@ class Follows extends Model
         parent::__construct($attributes);
     }
 
-
     // follower
     public function followable(): MorphTo
     {
@@ -36,8 +35,8 @@ class Follows extends Model
         return config('social.follows.need_follows_to_approved');
     }
 
-    public function scopeApproved($query, $s = true)
+    public function scopeAccepted($query)
     {
-        return $query->where('approved', $s);
+        return $query->whereNotNull('accepted_at');
     }
 }

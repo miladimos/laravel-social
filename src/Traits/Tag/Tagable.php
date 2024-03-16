@@ -3,13 +3,14 @@
 namespace Miladimos\Social\Traits\Tag;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Model;
 
 trait Taggable
 {
     protected static function booted()
     {
-        static::deleted(function ($taggable) {
-            foreach ($taggable->tags as $tag) {
+        static::deleted(function (Model $entityModel) {
+            foreach ($entityModel->tags as $tag) {
                 $tag->forceDelete();
             }
         });
@@ -22,16 +23,16 @@ trait Taggable
 
     public function tagsRelation(): MorphToMany
     {
-        return $this->morphToMany(config('social.tags.model'), config('social.tags.taggables'), config('social.tags.morphs'));
+        return $this->morphToMany(config('social.tags.model'), config('social.tags.morphs'), config('social.tags.morphs_table'));
     }
 
-    public function attach($tag)
+    public function attachTag($tag)
     {
         $this->tagsRelation()->attach($tag);
         $this->save();
     }
 
-    public function detach($tag)
+    public function detachTag($tag)
     {
         $this->tagsRelation()->detach($tag);
         $this->save();
@@ -42,12 +43,4 @@ trait Taggable
         $this->tagsRelation()->sync($tags);
         $this->save();
     }
-
-    // /**
-    //  * Get all of the books that are assigned this tag.
-    //  */
-    // public function books()
-    // {
-    //     return $this->morphedByMany(Book::class, 'tagables', 'tagabless');
-    // }
 }

@@ -3,7 +3,7 @@
     "description": "a full and simple toolkit for social networks",
     "homepage": "https://github.com/miladimos/laravel-social",
     "type": "library",
-    "version" : "0.6.0",
+    "version" : "0.6.3",
     "keywords": [
         "laravel",
         "laravel-package",

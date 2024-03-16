@@ -28,7 +28,7 @@ trait Categoriable
 
     public function categoriesRelation(): MorphToMany
     {
-        return $this->morphToMany($this->categoriableModel(), 'categoriable');
+        return $this->morphToMany($this->categoriableModel(), config('social.categories.morphs'));
     }
 
     public function syncCategories(...$categories)

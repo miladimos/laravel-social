@@ -2,7 +2,6 @@
 
 namespace Miladimos\Social\Models;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -58,12 +57,12 @@ class Comment extends Model
 
     public function children()
     {
-        return $this->hasMany(Config::get('social.comments.model'), 'parent_id', 'id');
+        return $this->hasMany(Comment::get('social.comments.model'), 'parent_id', 'id');
     }
 
     public function parent()
     {
-        return $this->belongsTo(Config::get('social.comments.model'), 'id', 'parent_id');
+        return $this->belongsTo(Comment::get('social.comments.model'), 'id', 'parent_id');
     }
 
     public function scopeApproved(Builder $query, $approved): Builder

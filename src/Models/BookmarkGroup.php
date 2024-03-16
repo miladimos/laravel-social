@@ -4,6 +4,7 @@ namespace Miladimos\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Miladimos\Social\Traits\HasUUID;
+use Miladimos\Social\Models\Bookmark;
 
 class BookmarkGroup extends Model
 {

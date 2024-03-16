@@ -19,6 +19,13 @@ return [
         'need_follows_to_approved' => false,
     ],
 
+
+    'categories' => [
+        'model' => Miladimos\Social\Models\Category::class,
+
+        'morphs' => 'categoriable',
+    ],
+
     'likes' => [
         'model' => Miladimos\Social\Models\Like::class,
 
@@ -37,11 +44,6 @@ return [
         ],
     ],
 
-    'categories' => [
-        'model' => Miladimos\Social\Models\Category::class,
-
-        'morphs' => 'categoriable',
-    ],
 
     'comments' => [
         'model' => Miladimos\Social\Models\Comment::class,
