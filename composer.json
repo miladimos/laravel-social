@@ -1,6 +1,6 @@
 {
     "name": "miladimos/laravel-social",
-    "description": "a full and simple toolkit for social networks",
+    "description": "a simple toolkit for social networks",
     "homepage": "https://github.com/miladimos/laravel-social",
     "type": "library",
     "version" : "0.6.3",
@@ -9,23 +9,17 @@
         "laravel-package",
         "laravel-social",
         "laravel support",
-        "lumen packages",
         "laravel packages",
-        "lumen support",
         "like",
         "subscribe",
-        "bookmark",
         "laravel-like",
-        "laravel-follow",
-        "laravel-bookmark",
-        "laravel-comment"
-
+        "laravel-follow"
     ],
     "authors": [
         {
             "name": "miladimos",
             "email": "miladimos@outlook.com",
-            "role": "maintaner",
+            "role": "maintainer",
             "homepage": "https://github.com/miladimos"
         }
     ],
