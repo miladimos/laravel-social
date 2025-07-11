@@ -3,7 +3,7 @@
     "description": "a simple toolkit for social networks",
     "homepage": "https://github.com/miladimos/laravel-social",
     "type": "library",
-    "version" : "0.6.3",
+    "version" : "0.7.0",
     "keywords": [
         "laravel",
         "laravel-package",
@@ -13,7 +13,8 @@
         "like",
         "subscribe",
         "laravel-like",
-        "laravel-follow"
+        "laravel-follow",
+        "social network"
     ],
     "authors": [
         {

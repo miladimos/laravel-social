@@ -2,9 +2,11 @@
 
 namespace Miladimos\Social\Traits\Like;
 
+use App\Models\User;
 use Miladimos\Social\Models\Like;
 use Illuminate\Database\Eloquent\Model;
 use Miladimos\Social\Models\LikeCounter;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Likeable
 {
@@ -55,23 +57,6 @@ trait Likeable
     {
         $this->likes()->delete();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function scopeLikedBy($query, $userId = null)
     {
@@ -128,6 +113,4 @@ trait Likeable
             $q->where('user_id', '=', $userId);
         });
     }
-
-
 }

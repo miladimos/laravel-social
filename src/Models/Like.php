@@ -8,14 +8,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Like extends Model
 {
+    protected $table = 'social_likes';
+
     protected $guarded = [];
-
-    public function __construct(array $attributes = [])
-    {
-        $this->table = config('social.likes.table', 'social_likes');
-
-        parent::__construct($attributes);
-    }
 
     public function likeable(): MorphTo
     {

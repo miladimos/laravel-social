@@ -13,8 +13,6 @@ class SocialServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . "/../../config/social.php", 'social');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-
         $this->registerFacades();
     }
 
@@ -53,7 +51,7 @@ class SocialServiceProvider extends ServiceProvider
     private function registerMigrations()
     {
         $this->publishes([
-            __DIR__ . '/../../database/migrations/create_socials_table.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_socials_tables.php'),
+            __DIR__ . '/../../database/migrations/create_socials_table.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_socials_table.php'),
         ], 'social-migrations');
     }
 }

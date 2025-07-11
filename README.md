@@ -34,136 +34,50 @@ php artisan migrate
 
 # Features
 
-## Tag:
+## Follow/UnFollow
 
-First add `Taggable` trait to models that you want have tags
+First add `Followable` trait to user model
 
 ```php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Miladimos\Social\Traits\Taggable;
+use Miladimos\Social\Traits\Follows\Followable;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class User extends Model
 {
     use HasFactory,
-        Taggable;
+        Followable;
 }
 
 ```
 
-Second you can work with tags:
+and enable to you follow/unfollow feature:
 
 ```php
 namespace App\Http\Controller;
 
-use App\Models\Post;
-use Miladimos\Social\Models\Tag;
+use App\Models\User;
 
 class YourController extends Controller
 {
     public function index()
     {   
-        // first you can create custom tags
-        $tag = Tag::create(['name' => 'tag']);   
+        $firstUser = User::first();
+        $secondUser = User::find(2);
 
-        $post = Post::first();
+        $firstUser->follow($secondUser);
+        $firstUser->unfollow($secondUser);
+        $firstUser->toggleFollow($secondUser);
 
-        $post->tags; // return attached tags
-
-        $post->attach($tag); // attach one tag
-
-        $post->detach($tag); // detach one tag
-
-        $post->syncTags([$tags]); // sync tags
-
-        $tag->taggables; // return morph relation to tagged model
+        $firstUser->followers;
+        $firstUser->followings;
     }
 }
 
 ```
-tag model have soft deletes trait.
-
 
 ## Like
 
-## Bookmark
-
-## Follow
-
-## Category
-
-First add `Taggable` trait to models that you want have attachments
-
-```php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Miladimos\Social\Traits\Taggable;
-
-class Post extends Model
-{
-    use HasFactory,
-        Taggable;
-}
-
-```
-
-### Methods
-
-in controllers you have these methods:
-
-```php
-
-namespace App\Http\Controllers;
-
-use App\Models\Post;
-
-class PostController extends Controller
-{
-    public function index()
-    {
-        $post = Post::find(1);
-
-        $post->likes // return all likes
-
-
-    }
-}
-
-```
-
-####  Features
-
-Like
-
-Favorite
-
-Bookmark
-
-Follow \ Unfollow
-
-Comment
-
-$post = Post::find(1);
-
-$post->comment('This is a comment');
-
-$post->commentAsUser($user, 'This is a comment from someone else');
-$comment = $post->comments->first();
-
-$comment->approve();
-
-Auto Approve Comments implements Commentator needsCommentApproval false
-
-// Retrieve all comments
-$comments = $post->comments;
-
-// Retrieve only approved comments
-$approved = $post->comments()->approved()->get();
-
-Vote / Rate System

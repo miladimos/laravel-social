@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create(config('social.follows.table'), function (Blueprint $table) {
+        Schema::create('social_follows', function (Blueprint $table) {
             $table->id();
             $table->morphs('followable'); // follower
             $table->morphs('followingable'); // following
@@ -17,19 +17,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create(config('social.likes.table'), function (Blueprint $table) {
+        Schema::create('social_likes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(config('social.likes.liker_foreign_key'))->index()->comment('user_id');
-            $table->morphs(config('social.likes.morphs'));
+            $table->morphs('likerable'); // user
+            $table->morphs('likeable'); // model
             $table->timestamps();
-
-            $table->unique(['likeable_id', 'likeable_type'], 'likes');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists(config('social.follows.table'));
-        Schema::dropIfExists(config('social.likes.table'));
+        Schema::dropIfExists('social_follows');
+        Schema::dropIfExists('social_likes');
     }
 };
