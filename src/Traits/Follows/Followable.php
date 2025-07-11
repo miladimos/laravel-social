@@ -273,7 +273,7 @@ trait Followable
 
     public function followMany(Collection $entities)
     {
-        $entities->each(function (FollowableContract $entity) {
+        $entities->each(function (Model $entity) {
             $this->follow($entity);
         });
 
@@ -282,7 +282,7 @@ trait Followable
 
     public function unfollowMany(Collection $entities)
     {
-        $entities->each(function (FollowableContract $entity) {
+        $entities->each(function (Model $entity) {
             $this->unfollow($entity);
         });
 
