@@ -14,7 +14,6 @@ trait Likeable
     {
         static::deleting(function ($model) {
             $model->likes()->delete();
-            // $model->removeLikes();
         });
     }
 
@@ -51,11 +50,6 @@ trait Likeable
         }
 
         return false;
-    }
-
-    public function removeLikes()
-    {
-        $this->likes()->delete();
     }
 
     public function scopeLikedBy($query, $userId = null)

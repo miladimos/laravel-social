@@ -12,19 +12,16 @@ class Like extends Model
 
     protected $guarded = [];
 
+    // liked model
     public function likeable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function liker()
+    // liker
+    public function likerable(): MorphTo
     {
-        return $this->user();
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(config('auth.providers.users.model'), config('like.user_foreign_key'));
+        return $this->morphTo();
     }
 
     public function scopeWithType(Builder $query, string $type)

@@ -100,7 +100,7 @@ trait Followable
 
         // $this->followers()->detach($user);
 
-        $this->followables()->followedBy($follower)->get()->each->delete();
+        $this->followers()->followedBy($follower)->get()->each->delete();
     }
 
     public function acceptFollowRequestFrom(Model $follower): void
@@ -110,7 +110,7 @@ trait Followable
         }
         // $this->followers()->updateExistingPivot($user, ['accepted_at' => now()]);
 
-        $this->followables()->followedBy($follower)->get()->each->update(['accepted_at' => \now()]);
+        $this->followers()->followedBy($follower)->get()->each->update(['accepted_at' => \now()]);
     }
 
     public function isFollowedBy(Model $follower): bool
@@ -120,16 +120,12 @@ trait Followable
         }
 
         if ($this->relationLoaded('followers')) {
-            return $this->followers->whereNotNull('accepted_at')->contains($follower);
+            return $this->followers()
+                ->whereNotNull('accepted_at')
+                ->contains($follower);
         }
 
         return $this->followers()->accepted()->followedBy($follower)->exists();
-
-        // if ($this->relationLoaded('followers')) {
-        //     return $this->followers()
-        //         ->wherePivot('accepted_at', '!=', null)
-        //         ->contains($user);
-        // }
     }
 
     public function isFollowing(Model $followable): bool
@@ -139,33 +135,16 @@ trait Followable
         }
 
         if ($this->relationLoaded('followings')) {
-            return $this->followings
+            return $this->followings()
                 ->whereNotNull('accepted_at')
                 ->where('followable_id', $followable->getKey())
                 ->where('followable_type', $followable->getMorphClass())
+                // ->contains($followable)
                 ->isNotEmpty();
         }
 
         return $this->followings()->of($followable)->accepted()->exists();
-
-
-        // if ($this->relationLoaded('followings')) {
-        //     return $this->followings()
-        //         ->wherePivot('accepted_at', '!=', null)
-        //         ->contains($model);
-        // }
-
-        // // return tap($this->relationLoaded('subscriptions') ? $this->subscriptions : $this->subscriptions())
-        // //         ->where('subscribable_id', $object->getKey())
-        // //         ->where('subscribable_type', $object->getMorphClass())
-        // //         ->count() > 0;
     }
-
-
-
-
-
-
 
     public function approvedFollowers()
     {
@@ -187,29 +166,11 @@ trait Followable
             return $this->followings->whereNull('accepted_at')
                 ->where('followable_id', $followable->getKey())
                 ->where('followable_type', $followable->getMorphClass())
+                //         ->contains($user)
                 ->isNotEmpty();
         }
 
         return $this->followings()->of($followable)->notAccepted()->exists();
-
-
-
-
-
-        // if ($user instanceof Model) {
-        //     $user = $user->getKey();
-        // }
-
-        // if ($this->relationLoaded('followings')) {
-        //     return $this->followings
-        //         ->where('pivot.accepted_at', '===', null)
-        //         ->contains($user);
-        // }
-
-        // return $this->followings()
-        //     ->wherePivot('accepted_at', null)
-        //     ->where($this->getQualifiedKeyName(), $user)
-        //     ->exists();
     }
 
     public function approvedFollowings(): HasMany

@@ -15,21 +15,44 @@ trait CanLike
         });
     }
 
-    public function likes(): MorphMany
+    public function likeModel(): string
     {
-// favoriteable
-        return $this->morphMany(config('social.likes.model'), config('social.likes.user_foreign_key'), $this->getKeyName());
+        return config('social.likes.model');
     }
 
-    public function like(Model $object): Like
+    public function likes(): MorphMany
     {
+        return $this->morphMany($this->likeModel(), 'likerable');
+    }
+
+    public function like(Model $object)
+    {
+        $relation = \app($this->likeModel())
+            ->where('likeable_id', $object->getKey())
+            ->where('likeable_type', $object->getMorphClass())
+            ->where('likerable_id', $this->getKey())
+            ->first();
+
+        if ($relation) {
+            if ($this->relationLoaded('likes')) {
+                $this->unsetRelation('likes');
+            }
+        }
+
+        $this->likes()->createOrFirst([
+            'likeable_id' => $object->getKey(),
+            'likeable_type' => $object->getMorphClass(),
+        ]);
+
+
         $attributes = [
             'likeable_type' => $object->getMorphClass(),
             'likeable_id' => $object->getKey(),
-            config('social.likes.user_foreign_key') => $this->getKey(),
+            'likerable_type' => get_class(auth()->user()),
+            'likerable_id' => auth()->user()->id,
         ];
 
-        $like = \app(config('social.likes.model'));
+        $like = \app($this->likeModel());
 
         return $like->where($attributes)->firstOr(
             function () use ($like, $attributes) {
@@ -46,7 +69,7 @@ trait CanLike
 
     public function unlike(Model $object): bool
     {
-        $relation = \app(config('social.likes.model'))
+        $relation = \app($this->likeModel())
             ->where('likeable_id', $object->getKey())
             ->where('likeable_type', $object->getMorphClass())
             ->where(config('social.likes.user_foreign_key'), $this->getKey())

@@ -4,7 +4,6 @@ namespace Miladimos\Social\Traits\Like;
 
 use Miladimos\Social\Models\Like;
 use Illuminate\Database\Eloquent\Model;
-use Miladimos\Social\Models\LikeCounter;
 
 trait Likeable
 {
@@ -71,6 +70,4 @@ trait Likeable
         LikeCounter::where('likeable_type', $this->morphClass)->where('likeable_id', $this->id)->delete();
         // $this->likeCounter()->delete();
     }
-
-
 }
