@@ -5,7 +5,6 @@ namespace Miladimos\Social\Traits\Like;
 use App\Models\User;
 use Miladimos\Social\Models\Like;
 use Illuminate\Database\Eloquent\Model;
-use Miladimos\Social\Models\LikeCounter;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Likeable
@@ -63,13 +62,6 @@ trait Likeable
         });
     }
 
-
-    /**
-     * Has the currently logged in user already "liked" the current object
-     *
-     * @param string $userId
-     * @return boolean
-     */
     public function liked($userId = null)
     {
         if (is_null($userId)) {
@@ -81,21 +73,10 @@ trait Likeable
             ->count();
     }
 
-    /**
-     * Private. Increment the total like count stored in the counter
-     */
-
-
-    /**
-     * Did the currently logged in user like this model
-     * Example : if($book->liked) { }
-     * @return boolean
-     */
     public function getLikedAttribute()
     {
         return $this->liked();
     }
-
 
     public function scopeWhereLikedBy($query, $userId = null)
     {

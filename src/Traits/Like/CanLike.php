@@ -2,7 +2,6 @@
 
 namespace Miladimos\Social\Traits\Like;
 
-use Miladimos\Social\Models\Like;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -27,44 +26,14 @@ trait CanLike
 
     public function like(Model $object)
     {
-        $relation = \app($this->likeModel())
-            ->where('likeable_id', $object->getKey())
-            ->where('likeable_type', $object->getMorphClass())
-            ->where('likerable_id', $this->getKey())
-            ->first();
+        if (! $this->hasLiked($object)) {
+            $attributes = [
+                'likeable_type' => $object->getMorphClass(),
+                'likeable_id' => $object->getKey(),
+            ];
 
-        if ($relation) {
-            if ($this->relationLoaded('likes')) {
-                $this->unsetRelation('likes');
-            }
+            $this->likes()->create($attributes);
         }
-
-        $this->likes()->createOrFirst([
-            'likeable_id' => $object->getKey(),
-            'likeable_type' => $object->getMorphClass(),
-        ]);
-
-
-        $attributes = [
-            'likeable_type' => $object->getMorphClass(),
-            'likeable_id' => $object->getKey(),
-            'likerable_type' => get_class(auth()->user()),
-            'likerable_id' => auth()->user()->id,
-        ];
-
-        $like = \app($this->likeModel());
-
-        return $like->where($attributes)->firstOr(
-            function () use ($like, $attributes) {
-                $like->unguard();
-
-                if ($this->relationLoaded('likes')) {
-                    $this->unsetRelation('likes');
-                }
-
-                return $like->create($attributes);
-            }
-        );
     }
 
     public function unlike(Model $object): bool
@@ -96,7 +65,7 @@ trait CanLike
         return ($this->relationLoaded('likes') ? $this->likes : $this->likes())
             ->where('likeable_id', $object->getKey())
             ->where('likeable_type', $object->getMorphClass())
-            ->count() > 0;
+            ->exists();
     }
 
     public function likesCount(): int
