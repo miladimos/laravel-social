@@ -28,7 +28,12 @@ trait Likeable
 
     public function likedBy(User $user)
     {
-        $this->likes()->create(['likeable_id' => $user->id, 'likeable_type' => get_class($user)]);
+        $this->likes()->create(
+            [
+                'likeable_id' => $user->id,
+                'likeable_type' => get_class($user),
+            ]
+        );
     }
 
     public function dislikedBy(User $user)
